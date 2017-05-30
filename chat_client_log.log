@@ -1,0 +1,50 @@
+May 23, 2017 3:52:02 PM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 23, 2017 3:52:02 PM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 23, 2017 3:56:37 PM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 23, 2017 3:56:37 PM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 23, 2017 4:06:30 PM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 23, 2017 4:06:30 PM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 23, 2017 4:19:56 PM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 23, 2017 4:19:56 PM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 23, 2017 4:19:56 PM codeu.chat.ClientMain main
+INFO: Creating client...
+May 23, 2017 4:19:56 PM codeu.chat.ClientMain main
+INFO: Created client
+May 24, 2017 12:05:12 PM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 24, 2017 12:05:12 PM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 24, 2017 12:05:12 PM codeu.chat.ClientMain main
+INFO: Creating client...
+May 24, 2017 12:05:12 PM codeu.chat.ClientMain main
+INFO: Created client
+May 29, 2017 11:50:31 AM codeu.chat.ClientMain main
+SEVERE: Failed to read from input
+May 29, 2017 11:50:35 AM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 29, 2017 11:50:35 AM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 29, 2017 11:50:35 AM codeu.chat.ClientMain main
+INFO: Creating client...
+May 29, 2017 11:50:35 AM codeu.chat.ClientMain main
+INFO: Created client
+May 29, 2017 11:52:11 AM codeu.chat.client.core.Controller newUser
+INFO: newUser: Request completed.
+May 29, 2017 11:52:11 AM codeu.chat.client.core.Controller newUser
+INFO: newUser: Response completed.
+May 29, 2017 11:53:35 AM codeu.chat.ClientMain main
+INFO: ============================= START OF LOG =============================
+May 29, 2017 11:53:35 AM codeu.chat.ClientMain main
+INFO: Starting chat client...
+May 29, 2017 11:53:35 AM codeu.chat.ClientMain main
+INFO: Creating client...
+May 29, 2017 11:53:35 AM codeu.chat.ClientMain main
+INFO: Created client
