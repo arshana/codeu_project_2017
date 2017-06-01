@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.List;
+import java.util.ArrayList;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
@@ -71,7 +72,7 @@ public final class Chat {
       return true;
     }
 
-    if (panels.peek().handleCommand(command, tokens)) {
+    if (panels.peek().handleCommand(command, token)) {
       // the command was handled
       return true;
     }
