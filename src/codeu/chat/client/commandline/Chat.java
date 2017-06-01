@@ -25,6 +25,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import code.chat.util.Tokenizer;
 
 public final class Chat {
 
@@ -72,7 +73,7 @@ public final class Chat {
       return true;
     }
 
-    if (panels.peek().handleCommand(command, token)) {
+    if (panels.peek().handleCommand(command, tokens)) {
       // the command was handled
       return true;
     }
