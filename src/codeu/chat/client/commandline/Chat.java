@@ -180,6 +180,23 @@ public final class Chat {
         return null;
       }
     });
+    
+    //Added this code to respond to the user's request of info
+    panel.register("info", new Panel.Command() {
+  	  @Override
+  	  public void invoke(Scanner args) {
+  	    final ServerInfo info = context.getInfo();
+  	    if (info == null) {
+  	      // Communicate error to user - the server did not send us a valid
+  	              // info object.
+  	    	System.out.println("ERROR: Failed to create valid info object");
+  	    } else {
+  	      // Print the server info to the user in a pretty way
+  	    	System.out.println("SERVER UP TIME: " + info.startTime);
+  	    	
+  	    }
+  	  }
+  	});
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
