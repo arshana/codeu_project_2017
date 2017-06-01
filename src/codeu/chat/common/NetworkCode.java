@@ -36,7 +36,7 @@ public final class NetworkCode {
       RELAY_READ_RESPONSE = 28,
       RELAY_WRITE_REQUEST = 29,
       RELAY_WRITE_RESPONSE = 30,
-  	  SERVER_INFO_REQUEST = 31,
+      //Next two variables defined during Version Check technical activity
+      SERVER_INFO_REQUEST = 31,
       SERVER_INFO_RESPONSE = 32;
-
 }

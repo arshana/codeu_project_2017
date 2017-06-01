@@ -25,15 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.LinearUuidGenerator;
-import codeu.chat.common.Message;
-import codeu.chat.common.NetworkCode;
-import codeu.chat.common.Relay;
-import codeu.chat.common.Secret;
-import codeu.chat.common.ServerInfo;
-import codeu.chat.common.User;
+import codeu.chat.common.*;
+
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -65,6 +58,9 @@ public final class Server {
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
   /* This was added to create a ServerInfo object*/
+  private static final ServerInfo info = new ServerInfo();
+
+  //added during Version Check technical activity
   private static final ServerInfo info = new ServerInfo();
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
@@ -222,6 +218,12 @@ public final class Server {
           if (type == NetworkCode.SERVER_INFO_REQUEST) {
         	  Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_RESPONSE);
         	  Time.SERIALIZER.write(connection.out(), info.startTime);
+          }
+
+          //Added this if statement during Version Check technical activity.
+          if(type == NetworkCode.SERVER_INFO_REQUEST){
+              Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_RESPONSE);
+              Uuid.SERIALIZER.write(connection.out(), info.version);
           }
 
           if (command == null) {
