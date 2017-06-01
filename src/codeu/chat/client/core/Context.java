@@ -49,8 +49,9 @@ public final class Context {
     return users;
   }
 
-  //Added during Version Check technical activity.
-  public ServerInfo getInfo(){
-      return view.getInfo();
+  //Added during Version Check technical activity
+  //Added this method to get the info from the server
+  public ServerInfo getInfo() {
+	  return view.getInfo();
   }
 }
