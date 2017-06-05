@@ -54,7 +54,7 @@ public final class Chat {
     final List<String> args = new ArrayList<>();
     final Tokenizer tokenizer = new Tokenizer(line);
     try{
-    for (String token = tokenizer.next(); token != null;) {
+    for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
         args.add(token);
     }
     }

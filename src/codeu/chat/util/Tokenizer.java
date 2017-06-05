@@ -27,7 +27,6 @@ public final class Tokenizer{
 	
 	private char read() throws IOException { 
 		final char c = peek();
-		System.out.println(c);
 		at += 1;
 		return c;
 	}
