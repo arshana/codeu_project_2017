@@ -25,14 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.LinearUuidGenerator;
-import codeu.chat.common.Message;
-import codeu.chat.common.NetworkCode;
-import codeu.chat.common.Relay;
-import codeu.chat.common.Secret;
-import codeu.chat.common.User;
+import codeu.chat.common.*;
+
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -63,6 +57,11 @@ public final class Server {
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
+  /* This was added to create a ServerInfo object*/
+  private static final ServerInfo info = new ServerInfo();
+
+  //added during Version Check technical activity
+  private static final ServerInfo info = new ServerInfo();
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
@@ -171,6 +170,15 @@ public final class Server {
         Serializers.collection(Message.SERIALIZER).write(out, messages);
       }
     });
+    
+    //Added this code to handle server requests
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+    	  @Override
+    	  public void onMessage(InputStream in, OutputStream out) throws IOException {
+    	    Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    	    Time.SERIALIZER.write(out, info.startTime);
+    	  }
+    });
 
     this.timeline.scheduleNow(new Runnable() {
       @Override
@@ -205,6 +213,18 @@ public final class Server {
 
           final int type = Serializers.INTEGER.read(connection.in());
           final Command command = commands.get(type);
+          
+          //Added this block of code to check the ServerInfo request
+          if (type == NetworkCode.SERVER_INFO_REQUEST) {
+        	  Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_RESPONSE);
+        	  Time.SERIALIZER.write(connection.out(), info.startTime);
+          }
+
+          //Added this if statement during Version Check technical activity.
+          if(type == NetworkCode.SERVER_INFO_REQUEST){
+              Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_RESPONSE);
+              Uuid.SERIALIZER.write(connection.out(), info.version);
+          }
 
           if (command == null) {
             // The message type cannot be handled so return a dummy message.
