@@ -8,6 +8,7 @@ public final class Tokenizer{
 
 	public Tokenizer(String source){
 		this.source = source;
+		token = new StringBuilder();
 	}
 
 	private int remaining() {  
@@ -46,10 +47,11 @@ public final class Tokenizer{
 			 return readWithNoQuotes();
 			//read a token that is not surrounded by quotes
 		}
+
 	}
 
 	private String readWithNoQuotes() throws IOException {
-  		token.setLength(0);  // clear the token
+  		token.setLength(0);  //clear the token
  		 while (remaining() > 0 && !Character.isWhitespace(peek())) {
     	token.append(read());
   		}
@@ -57,7 +59,7 @@ public final class Tokenizer{
 	}
 
 	private String readWithQuotes() throws IOException {
-  		token.setLength(0);  // clear the token
+  		token.setLength(0);   //clear the token
   		if (read() != '"') {
     		throw new IOException("Strings must start with opening quote");
  	 	}

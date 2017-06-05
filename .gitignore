@@ -1,5 +1,3 @@
-bin/
-*.log
 .idea/
 .metadata/
 .travis.yml
@@ -11,3 +9,5 @@ teams
 test/
 third_party/
 .gitignore
+bin/
+*.log
