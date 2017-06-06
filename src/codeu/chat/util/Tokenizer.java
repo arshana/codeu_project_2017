@@ -1,10 +1,12 @@
 package codeu.chat.util;
+
 import java.io.IOException;
 
 public final class Tokenizer{
-	private StringBuilder token;
-	private String source;
-	private int at;
+
+  private StringBuilder token;
+  private String source;
+  private int at;
 
 	public Tokenizer(String source){
 		this.source = source;
@@ -40,36 +42,32 @@ public final class Tokenizer{
 			return null;
 		}
 		else if(peek() == '"'){
-			 return readWithQuotes();
-			//read a token that is surrounded by quotes
+			return readWithQuotes(); //read a token that is surrounded by quotes
 		}
 		else{
-			 return readWithNoQuotes();
-			//read a token that is not surrounded by quotes
+			return readWithNoQuotes(); //read a token that is not surrounded by quotes
 		}
 
 	}
 
 	private String readWithNoQuotes() throws IOException {
   		token.setLength(0);  //clear the token
- 		 while (remaining() > 0 && !Character.isWhitespace(peek())) {
-    	token.append(read());
+  		while (remaining() > 0 && !Character.isWhitespace(peek())) {
+  			token.append(read());
   		}
   		return token.toString();
-	}
+  	}
 
-	private String readWithQuotes() throws IOException {
+  	private String readWithQuotes() throws IOException {
   		token.setLength(0);   //clear the token
   		if (read() != '"') {
-    		throw new IOException("Strings must start with opening quote");
- 	 	}
+  			throw new IOException("Strings must start with opening quote");
+  		}
   		while (peek() != '"') {
-    		token.append(read());
+  			token.append(read());
   		}
   		read(); // read the closing the quote that allowed us to exit the loop
   		return token.toString();
-	}
+  	}
 
-
-	
 } //end class
