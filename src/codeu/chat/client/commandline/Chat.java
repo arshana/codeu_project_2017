@@ -208,7 +208,7 @@ public final class Chat {
       }
     });
     
-    	panel.register("info", new Panel.Command() {
+    panel.register("info", new Panel.Command() {
 	  @Override
 	  public void invoke(Scanner args) {
 	    final ServerInfo info = context.getInfo();
