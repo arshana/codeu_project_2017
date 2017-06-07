@@ -29,6 +29,7 @@ import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Tokenizer;
 
+
 public final class Chat {
 
   // PANELS
@@ -122,6 +123,10 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
+        //Next two lines added during Version Check technical activity.
+        System.out.println("  info");
+        System.out.println("    Get version.");
+        //
         System.out.println("  exit");
         System.out.println("    Exit the program.");
       }
@@ -208,21 +213,24 @@ public final class Chat {
       }
     });
     
-    panel.register("info", new Panel.Command() {
-	  @Override
-	  public void invoke(Scanner args) {
-	    final ServerInfo info = context.getInfo();
-	    if (info == null) {
-	      // Communicate error to user - the server did not send us a valid
-	              // info object.
-	    	System.out.println("ERROR: Failed to create valid info object");
-	    } else {
-	      // Print the server info to the user in a pretty way
-	    	System.out.println("SERVER UP TIME: " + info.startTime);
-	    	
-	    }
-	  }
-	});
+    //Added this code to respond to the user's request of info
+    // INFO (return version)
+    // Added during Version Check technical activity.
+    panel.register("info", new Panel.Command(){
+        @Override
+        public void invoke(Scanner args){
+            final ServerInfo info = context.getInfo();
+            if (info == null){
+                //Communicate error to user - the server did not send us a valid info object.
+                System.out.println("ERROR: Server sent invalid info object");
+            }
+            else {
+                //Print the server info to the user in a pretty way.
+                System.out.println("Version: " + info.version);
+                System.out.println("SERVER UP TIME: " + info.startTime);
+            }
+        }
+    });
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
