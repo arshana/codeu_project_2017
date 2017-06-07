@@ -119,46 +119,46 @@ final class View implements BasicView {
   @Override
   public Collection<Message> getMessages(Collection<Uuid> ids) {
 
-      final Collection<Message> messages = new ArrayList<>();
+    final Collection<Message> messages = new ArrayList<>();
 
-      try (final Connection connection = source.connect()) {
+    try (final Connection connection = source.connect()) {
 
-          Serializers.INTEGER.write(connection.out(), NetworkCode.GET_MESSAGES_BY_ID_REQUEST);
-          Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
+      Serializers.INTEGER.write(connection.out(), NetworkCode.GET_MESSAGES_BY_ID_REQUEST);
+      Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
 
-          if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_MESSAGES_BY_ID_RESPONSE) {
-              messages.addAll(Serializers.collection(Message.SERIALIZER).read(connection.in()));
-          } else {
-              LOG.error("Response from server failed.");
-          }
-      } catch (Exception ex) {
-          System.out.println("ERROR: Exception during call on server. Check log for details.");
-          LOG.error(ex, "Exception during call on server.");
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_MESSAGES_BY_ID_RESPONSE) {
+        messages.addAll(Serializers.collection(Message.SERIALIZER).read(connection.in()));
+      } else {
+        LOG.error("Response from server failed.");
       }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
 
-      return messages;
+    return messages;
   }
 
-  //Added this method during Version Check technical activity.
+  //Returns the ServerInfo requested.
   public ServerInfo getInfo(){
-      try(final Connection connection = this.source.connect()){
-          Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-          if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
-              final Uuid version = Uuid.SERIALIZER.read(connection.in());
-              return new ServerInfo(version);
-          }
-          else{
-              //Communicate this error - the server did not respond with the type of response we expected.
-              LOG.error("Unexpected response type from server.");
-          }
+    try(final Connection connection = this.source.connect()){
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
+        final Uuid version = Uuid.SERIALIZER.read(connection.in());
+        return new ServerInfo(version);
       }
-      catch (Exception ex){
-          //Communicate this error - something went wrong with the connection.
-          System.out.println("ERROR: Exception during call on server. Check log for details.");
-          LOG.error(ex, "Exception during call on server.");
+      else{
+        //Communicate this error - the server did not respond with the type of response we expected.
+        LOG.error("Unexpected response type from server.");
       }
-      //If we get here, it means something went wrong, and null should be returned.
-      return null;
+    }
+    catch (Exception ex){
+      //Communicate this error - something went wrong with the connection.
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+    //If we get here, it means something went wrong, and null should be returned.
+    return null;
   }
   
   public ServerInfo getInfo() {
