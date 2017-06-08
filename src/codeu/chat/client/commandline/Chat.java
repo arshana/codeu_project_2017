@@ -213,9 +213,11 @@ public final class Chat {
       }
     });
     
-    //Added this code to respond to the user's request of info
     // INFO (return version)
-    // Added during Version Check technical activity.
+    //
+    // Add a command to respond to the user's request of info. Return version and 
+    // server up time.
+    //
     panel.register("info", new Panel.Command(){
         @Override
         public void invoke(Scanner args){
@@ -226,7 +228,7 @@ public final class Chat {
             }
             else {
                 //Print the server info to the user in a pretty way.
-                System.out.println("Version: " + info.version);
+                System.out.println("VERSION: " + info.version);
                 System.out.println("SERVER UP TIME: " + info.startTime);
             }
         }
