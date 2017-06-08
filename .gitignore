@@ -1,14 +1,2 @@
-.idea/
-.metadata/
-.travis.yml
-CONTRIBUTING.md
-LICENSE
-README.md
-build.py
-teams
-test/
-third_party/
-.gitignore
 bin/
 *.log
-.gitignore
