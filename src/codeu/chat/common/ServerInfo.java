@@ -38,4 +38,10 @@ public final class ServerInfo {
   public ServerInfo(Time startTime) {
     this.startTime = startTime;
   }
+  
+  //constructor add during code review
+  public ServerInfo(Uuid version, Time startTime){
+    this.version = version;
+    this.startTime = startTime;
+  }
 }
