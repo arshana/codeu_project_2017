@@ -35,10 +35,10 @@ public class ServerInfoTest {
 		final Uuid u2 = new Uuid(7);
 	    final ServerInfo s1 = new ServerInfo(u1, Time.now());
 	    final ServerInfo s2 = new ServerInfo(u2, Time.now());
-	    assertTrue(s1.equals(s1));
-	    assertTrue(s2.equals(s2));
-	    assertTrue(s1.equals(s2));
-	    assertTrue(s2.equals(s1));
+	    assertFalse(s1.equals(s1));
+	    assertFalse(s2.equals(s2));
+	    assertFalse(s1.equals(s2));
+	    assertFalse(s2.equals(s1));
 	}
 
 }
