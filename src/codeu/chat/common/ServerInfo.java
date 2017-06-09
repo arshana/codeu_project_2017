@@ -28,7 +28,8 @@ public final class ServerInfo {
     }
       this.version = version1;
   }
-    
+  
+  /*
   //constructor added during Version Check activity
   public ServerInfo(Uuid version) {
     this.version = version;
@@ -37,7 +38,7 @@ public final class ServerInfo {
   //constructor added during UpTime activity
   public ServerInfo(Time startTime) {
     this.startTime = startTime;
-  }
+  }*/
   
   //constructor add during code review
   public ServerInfo(Uuid version, Time startTime){
