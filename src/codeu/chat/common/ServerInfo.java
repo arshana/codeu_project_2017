@@ -6,8 +6,8 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 /**
- * Created by arshana on 5/25/17.
- * Created during Version Check technical activity
+ * Created by Arshana and Rithu
+ * Created during Version Check/Up Time technical activity
  * Holds Server's information
  * Used by both Client and Server
  */

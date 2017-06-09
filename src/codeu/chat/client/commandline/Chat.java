@@ -157,12 +157,12 @@ public final class Chat {
     panel.register("u-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String name = "";
+        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
         else{
-          name = args.get(0)
+          name = args.get(0);
         }
         if (name.length() > 0) {
           if (context.create(name) == null) {
@@ -182,7 +182,7 @@ public final class Chat {
     panel.register("u-sign-in", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String name = "";
+        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
@@ -220,7 +220,7 @@ public final class Chat {
     //
     panel.register("info", new Panel.Command(){
         @Override
-        public void invoke(Scanner args){
+        public void invoke(List<String> args){
             final ServerInfo info = context.getInfo();
             if (info == null){
                 //Communicate error to user - the server did not send us a valid info object.
@@ -292,7 +292,7 @@ public final class Chat {
     panel.register("c-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String name = "";
+        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
@@ -320,7 +320,7 @@ public final class Chat {
     panel.register("c-join", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String name = "";
+        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
@@ -427,7 +427,7 @@ public final class Chat {
     panel.register("m-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        final String message = "";
+        String message = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
