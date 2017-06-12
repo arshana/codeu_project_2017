@@ -157,19 +157,14 @@ public final class Chat {
     panel.register("u-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        String name = "";
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new user");
+          System.out.println("ERROR: Failed to add new user, expecting one arg <username>");
         }
         else{
-          name = args.get(0);
-        }
-        if (name.length() > 0) {
+          String name = args.get(0);
           if (context.create(name) == null) {
             System.out.println("ERROR: Failed to create new user");
           }
-        } else {
-          System.out.println("ERROR: Missing <username>");
         }
       }
     });
@@ -182,22 +177,16 @@ public final class Chat {
     panel.register("u-sign-in", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
         else{
-          name = args.get(0);
-        }
-        if (name.length() > 0) {
+          String name = args.get(0);
           final UserContext user = findUser(name);
           if (user == null) {
             System.out.format("ERROR: Failed to sign in as '%s'\n", name);
-          } else {
+          } 
             panels.push(createUserPanel(user));
-          }
-        } else {
-          System.out.println("ERROR: Missing <username>");
         }
       }
 
@@ -292,22 +281,16 @@ public final class Chat {
     panel.register("c-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
         else{
-          name = args.get(0);
-        }
-        if (name.length() > 0) {
+          String name = args.get(0);
           final ConversationContext conversation = user.start(name);
           if (conversation == null) {
             System.out.println("ERROR: Failed to create new conversation");
-          } else {
-            panels.push(createConversationPanel(conversation));
           }
-        } else {
-          System.out.println("ERROR: Missing <title>");
+            panels.push(createConversationPanel(conversation));
         }
       }
     });
@@ -320,23 +303,17 @@ public final class Chat {
     panel.register("c-join", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        String name = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
         else{
-          name = args.get(0);
-        }
-        if (name.length() > 0) {
+          String name = args.get(0);
           final ConversationContext conversation = find(name);
           if (conversation == null) {
             System.out.format("ERROR: No conversation with name '%s'\n", name);
-          } else {
+          } 
             panels.push(createConversationPanel(conversation));
-          }
-        } else {
-          System.out.println("ERROR: Missing <title>");
-        }
+        } 
       }
 
       // Find the first conversation with the given name and return its context.
@@ -427,17 +404,15 @@ public final class Chat {
     panel.register("m-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        String message = "";
         if(args.size() != 1){
           System.out.println("ERROR: Failed to add new user");
         }
         else{
-          message = args.get(0);
-        }
-        if (message.length() > 0) {
-          conversation.add(message);
-        } else {
+          String message = args.get(0);
+          if (message.length() < 0) {
           System.out.println("ERROR: Messages must contain text");
+          }
+          conversation.add(message);
         }
       }
     });
