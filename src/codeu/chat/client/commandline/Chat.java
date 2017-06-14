@@ -178,15 +178,16 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new user");
+          System.out.println("ERROR: Missing <username>");
         }
         else{
           String name = args.get(0);
           final UserContext user = findUser(name);
           if (user == null) {
             System.out.format("ERROR: Failed to sign in as '%s'\n", name);
-          } 
+          } else{
             panels.push(createUserPanel(user));
+          }
         }
       }
 
@@ -282,15 +283,16 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new user");
+          System.out.println("ERROR: Failed to title new conversation");
         }
         else{
           String name = args.get(0);
           final ConversationContext conversation = user.start(name);
           if (conversation == null) {
             System.out.println("ERROR: Failed to create new conversation");
-          }
+          } else{
             panels.push(createConversationPanel(conversation));
+          }
         }
       }
     });
@@ -304,15 +306,16 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new user");
+          System.out.println("ERROR: Failed to join conversation");
         }
         else{
           String name = args.get(0);
           final ConversationContext conversation = find(name);
           if (conversation == null) {
             System.out.format("ERROR: No conversation with name '%s'\n", name);
-          } 
+          } else {
             panels.push(createConversationPanel(conversation));
+          }
         } 
       }
 
@@ -405,13 +408,10 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new user");
+          System.out.println("ERROR: Failed to add new message");
         }
         else{
           String message = args.get(0);
-          if (message.length() < 0) {
-          System.out.println("ERROR: Messages must contain text");
-          }
           conversation.add(message);
         }
       }
