@@ -30,7 +30,6 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
-import sun.nio.ch.Net;
 
 // VIEW
 //

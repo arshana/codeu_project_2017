@@ -27,6 +27,7 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.User;
 import codeu.chat.util.Tokenizer;
 
 
@@ -43,6 +44,7 @@ public final class Chat {
 
   public Chat(Context context) {
     this.panels.push(createRootPanel(context));
+
   }
 
   // HANDLE COMMAND
@@ -246,8 +248,12 @@ public final class Chat {
         System.out.println("    List all conversations that the current user can interact with.");
         System.out.println("  c-add <title>");
         System.out.println("    Add a new conversation with the given title and join it as the current user.");
+        System.out.println("  c-add-interest <type> <title>");
+        System.out.println("    Add an interest for a user with the type ('c' or 'u') and its title.");
         System.out.println("  c-join <title>");
         System.out.println("    Join the conversation as the current user.");
+        System.out.println("  c-remove <type> <title>");
+        System.out.println("    Remove the current user's interest with the type ('c' or 'u') and its title.");
         System.out.println("  info");
         System.out.println("    Display all info for the current user");
         System.out.println("  back");
@@ -295,6 +301,129 @@ public final class Chat {
           }
         }
       }
+    });
+
+    // C-ADD-INTEREST (add interest)
+    //
+    // Add a command that will add a conversation or user that the user wants to follow
+    // when the user enters "c-add-interest" while on the user panel. Has two arguments,
+    // first one is 'c' or 'u' for conversations or users, then the name of that interest.
+    //
+    panel.register("c-add-interest", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args){
+        if(args.size() != 2){
+          System.out.println("ERROR: Missing <type> and <title>");
+         } 
+        else{
+          String type = args.get(0);
+          String name = args.get(1);
+          //check if interest is user or convo
+          if(type.equals("c")){
+            final ConversationContext conversation = find(name);
+            if(!(conversation == null)){
+              user.user.interests.add(conversation.conversation.id);
+              System.out.println("Conversation " + name + " added");
+            }  
+            else{
+              System.out.format("ERROR: No conversation with name '%s'\n", name);
+            } //add the UUID of conversation to the HashSet
+          }
+          else if(type.equals("u")){
+            final User u = findUser(name);
+            if(!(u == null)){
+              user.user.interests.add(u.id);
+              System.out.println("User " + name + " added");
+            } //add the UUID of the user to the HashSet
+            else{
+              System.out.format("ERROR: No user with name '%s'\n", name);
+            } 
+          }
+          else{
+            System.out.println("ERROR: Failed to find interest");
+          }
+        }
+      }
+
+      private User findUser(String name) {
+        for (final User u : user.users()){
+          if (u.name.equals(name)) {
+            return u; //implemented findUser from the u-list method
+          }
+        }
+        return null;
+      }
+
+      private ConversationContext find(String title) {
+        for (final ConversationContext conversation : user.conversations()) {
+          if (title.equals(conversation.conversation.title)) {
+            return conversation; //implemented find from c-join method
+          }
+        }
+        return null;
+      }
+    });
+
+    // C-REMOVE (remove interest)
+    //
+    // Add a command that will remove a user's interest when the user enters "c-remove"
+    // while on the user panel. Also has 2 args to distinguish
+    // between conversations and users.
+    //
+    panel.register("c-remove", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args){
+        if(args.size() != 2){
+          System.out.println("ERROR: Missing <type> and <title>");
+         } 
+        else{
+          String type = args.get(0);
+          String name = args.get(1);
+          //check if interest is user or convo
+          if(type.equals("c")){
+            final ConversationContext conversation = find(name);
+            if(!(conversation == null)){
+              user.user.interests.remove(conversation.conversation.id);
+              System.out.println("Conversation " + name + " removed");
+            } //remove the UUID of conversation to the HashSet
+            else{
+              System.out.format("ERROR: No conversation with name '%s'\n", name);
+            }
+          }
+          else if(type.equals("u")){
+            final User u = findUser(name);
+            if(!(u == null)){
+              user.user.interests.remove(u.id);
+              System.out.println("User " + name + " removed");
+            } //remove the UUID of the user to the HashSet
+            else{
+              System.out.format("ERROR: No user with name '%s'\n", name);
+            }
+          }
+          else{
+            System.out.println("ERROR: Failed to find interest");
+          }
+        }
+      }
+
+      private User findUser(String name) {
+        for (final User u : user.users()){
+          if (u.name.equals(name)) {
+            return u; //implemented findUser from the u-list method
+          }
+        }
+        return null;
+      }
+
+      private ConversationContext find(String title) {
+        for (final ConversationContext conversation : user.conversations()) {
+          if (title.equals(conversation.conversation.title)) {
+            return conversation; //implemented find from c-join method
+          }
+        }
+        return null;
+      }
+
     });
 
     // C-JOIN (join conversation)
