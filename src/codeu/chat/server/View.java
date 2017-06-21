@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.SinglesView;
@@ -72,6 +73,17 @@ public final class View implements BasicView, SinglesView {
   
   public ServerInfo getInfo(){
 	  return null;
+  }
+  
+  @SuppressWarnings("null")
+  public Collection<Uuid> getInterests(Uuid id) {
+	    Collection<Uuid> interests = null;
+	    User user = findUser(id);
+	    for(Uuid u: user.interests){
+	    	interests.add(u);
+	    	
+	    }
+	    return interests;
   }
 
   @Override

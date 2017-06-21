@@ -19,6 +19,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
@@ -52,6 +53,11 @@ public final class Controller implements RawController, BasicController {
   @Override
   public ConversationHeader newConversation(String title, Uuid owner) {
     return newConversation(createId(), title, owner, Time.now());
+  }
+  /////Not sure what to do with this//////
+  public Interest newInterest(Uuid id, String type, String title) {
+		// TODO Auto-generated method stub
+		return null;
   }
 
   @Override

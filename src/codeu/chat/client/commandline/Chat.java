@@ -125,7 +125,7 @@ public final class Chat {
         System.out.println("    Sign in as the user with the given name.");
         //Next two lines added during Version Check technical activity.
         System.out.println("  info");
-        System.out.println("    Get version.");
+        System.out.println("    Get version and server up time.");
         //
         System.out.println("  exit");
         System.out.println("    Exit the program.");

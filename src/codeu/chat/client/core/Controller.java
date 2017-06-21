@@ -20,6 +20,7 @@ import java.lang.Thread;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.User;
@@ -63,6 +64,30 @@ final class Controller implements BasicController {
 
     return response;
   }
+  
+  public Interest newInterest(Uuid id, String type, String title) {
+
+	    Interest response = null;
+
+	    try (final Connection connection = source.connect()) {
+
+	      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
+	      Uuid.SERIALIZER.write(connection.out(), id);
+	      Serializers.STRING.write(connection.out(), type);
+	      Serializers.STRING.write(connection.out(), title);
+
+	      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_INTEREST_RESPONSE) {
+	        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
+	      } else {
+	        LOG.error("Response from server failed.");
+	      }
+	    } catch (Exception ex) {
+	      System.out.println("ERROR: Exception during call on server. Check log for details.");
+	      LOG.error(ex, "Exception during call on server.");
+	    }
+
+	    return response;
+	  }
 
   @Override
   public User newUser(String name) {
