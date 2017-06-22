@@ -30,7 +30,6 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
-import sun.nio.ch.Net;
 
 // VIEW
 //
@@ -145,7 +144,7 @@ final class View implements BasicView {
       Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
         final Uuid version = Uuid.SERIALIZER.read(connection.in());
-	final Time startTime = Time.SERIALIZER.read(connection.in());
+	    final Time startTime = Time.SERIALIZER.read(connection.in());
         return new ServerInfo(version, startTime);
       }
       else{
