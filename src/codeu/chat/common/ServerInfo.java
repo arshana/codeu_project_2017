@@ -17,7 +17,7 @@ public final class ServerInfo {
   public final Time startTime;
     
   //constructor
-  public ServerInfo(){
+  public ServerInfo() {
     this.startTime = Time.now();
     Uuid version1;
     try {
@@ -26,7 +26,7 @@ public final class ServerInfo {
       e.printStackTrace();
       version1 = null;
     }
-      this.version = version1;
+    this.version = version1;
   }
   
   /*
