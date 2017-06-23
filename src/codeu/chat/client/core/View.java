@@ -20,6 +20,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.ServerInfo;
@@ -160,4 +161,50 @@ final class View implements BasicView {
     //If we get here, it means something went wrong, and null should be returned.
     return null;
   }
+
+  @Override
+  public Collection<Interest> getStatusUpdate(Uuid id){
+    final Collection<Interest> interests = new ArrayList<Interest>();
+
+    try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.GET_INTEREST_REQUEST);
+      Serializers.collection(Uuid.SERIALIZER).write(connection.out(), id);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_INTEREST_RESPONSE) {
+        //this adds all interests with a given Uuid
+        //I want all the interests of a User with a given Uuid
+        //Where is the list of Users? - in this class: getUsers()
+        //Do something like thatUser.interests -> ArrayList
+        //interests.addAll(Serializers.collection(Interest.SERIALIZER).read(connection.in()));
+        /*Collection<User> users = getUsers();
+        User user = null;
+        for (User u:
+             users) {
+          if (u.id.equals(id)) {
+            user = u;
+          }
+        }
+
+        if (user != null) {
+          for (Uuid interestID:
+               user.interests) {
+
+          }
+        }
+        else {
+          LOG.error("No such user.");
+        }*/
+        interests = Serializers.collection(Uuid.SERIALIZER).read(connection.in());
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+
+    return interests;
+  }
+
 }

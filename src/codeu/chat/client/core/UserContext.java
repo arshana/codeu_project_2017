@@ -20,6 +20,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.Interest;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 
@@ -52,5 +53,9 @@ public final class UserContext {
     }
 
     return all;
+  }
+
+  public Iterable<Interest> interests(Uuid id){
+    return view.getStatusUpdate(id);
   }
 }

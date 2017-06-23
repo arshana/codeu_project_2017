@@ -26,8 +26,11 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Tokenizer;
+import codeu.chat.util.User;
+import codeu.chat.util.Uuid;
 
 
 public final class Chat {
@@ -250,6 +253,8 @@ public final class Chat {
         System.out.println("    Join the conversation as the current user.");
         System.out.println("  info");
         System.out.println("    Display all info for the current user");
+        System.out.println("  show-status-update");
+        System.out.println("    Display all interests for the current user");
         System.out.println("  back");
         System.out.println("    Go back to ROOT MODE.");
         System.out.println("  exit");
@@ -344,6 +349,27 @@ public final class Chat {
         System.out.format("  Id   : UUID:%s\n", user.user.id);
       }
     });
+
+    // SHOW-STATUS-UPDATE
+    //
+    // Add a command that will print users current interests when the user enters
+    // "show-status-update" while on the user panel.
+    //
+    panel.register("show-status-update", new Panel.Command() {
+     @Override
+     public void invoke(List<String> args){
+       String name = args.get(0);
+       //print out status-update
+       for (final Interest interest : user.interests(Uuid.parse(name))) {
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
+       }
+     }
+    });
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
