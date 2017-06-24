@@ -1,14 +1,14 @@
 package codeu.chat.common;
 
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.util.HashSet;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashSet;
 
-        import codeu.chat.util.Serializer;
-        import codeu.chat.util.Serializers;
-        import codeu.chat.util.Time;
-        import codeu.chat.util.Uuid;
+import codeu.chat.util.Serializer;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
+import codeu.chat.util.Uuid;
 
 public class Interest {
 

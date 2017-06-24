@@ -56,6 +56,6 @@ public final class UserContext {
   }
 
   public Iterable<Interest> interests(Uuid id){
-    return view.getStatusUpdate(id);
+    return view.getInterests(id);
   }
 }

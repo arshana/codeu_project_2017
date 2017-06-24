@@ -163,7 +163,7 @@ final class View implements BasicView {
   }
 
   @Override
-  public Collection<Interest> getStatusUpdate(Uuid id){
+  public Collection<Interest> getInterests(Uuid id){
     final Collection<Interest> interests = new ArrayList<Interest>();
 
     try (final Connection connection = source.connect()) {
@@ -172,30 +172,7 @@ final class View implements BasicView {
       Serializers.collection(Uuid.SERIALIZER).write(connection.out(), id);
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_INTEREST_RESPONSE) {
-        //this adds all interests with a given Uuid
-        //I want all the interests of a User with a given Uuid
-        //Where is the list of Users? - in this class: getUsers()
-        //Do something like thatUser.interests -> ArrayList
-        //interests.addAll(Serializers.collection(Interest.SERIALIZER).read(connection.in()));
-        /*Collection<User> users = getUsers();
-        User user = null;
-        for (User u:
-             users) {
-          if (u.id.equals(id)) {
-            user = u;
-          }
-        }
-
-        if (user != null) {
-          for (Uuid interestID:
-               user.interests) {
-
-          }
-        }
-        else {
-          LOG.error("No such user.");
-        }*/
-        interests = Serializers.collection(Uuid.SERIALIZER).read(connection.in());
+        interests.addAll(Serializers.collection(Interest.SERIALIZER).read(connection.in()));
       } else {
         LOG.error("Response from server failed.");
       }
