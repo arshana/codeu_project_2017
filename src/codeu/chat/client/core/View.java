@@ -137,25 +137,27 @@ final class View implements BasicView {
 
     return messages;
   }
-  //Added this block of code////////////
-  public ServerInfo getInfo() {
-	  try (final Connection connection = source.connect()) {
-	    Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-	    if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
-	      final Time startTime = Time.SERIALIZER.read(connection.in());
-	      return new ServerInfo(startTime);
-	    } else {
-	      // Communicate this error - the server did not respond with the type of
-	      // response we expected.
-	    	LOG.error("Response from server failed.");
-	    }
-	  } catch (Exception ex) {
-	    // Communicate this error - something went wrong with the connection.
-		  System.out.println("ERROR: Exception during call on server. Check log for details.");
-	      LOG.error(ex, "Exception during call on server.");
-	  }
-	  // If we get here it means something went wrong and null should be returned
-	  return null;
-	}
-  ////////////////////////
+
+  @Override
+  public ServerInfo getInfo(){
+    try(final Connection connection = this.source.connect()){
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
+        final Uuid version = Uuid.SERIALIZER.read(connection.in());
+	    final Time startTime = Time.SERIALIZER.read(connection.in());
+        return new ServerInfo(version, startTime);
+      }
+      else{
+        //Communicate this error - the server did not respond with the type of response we expected.
+        LOG.error("Unexpected response type from server.");
+      }
+    }
+    catch (Exception ex){
+      //Communicate this error - something went wrong with the connection.
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+    //If we get here, it means something went wrong, and null should be returned.
+    return null;
+  }
 }

@@ -28,6 +28,7 @@ public final class Context {
 
   private final View view;
   private final Controller controller;
+  //private final static Logger.Log LOG = Logger.newLog(Context.class);
 
   public Context(ConnectionSource source) {
     this.view = new View(source);
@@ -48,10 +49,9 @@ public final class Context {
     }
     return users;
   }
-  ///////Added this code///////
-  public ServerInfo getInfo() {
-	  return view.getInfo();
-  }
-  ///////////
 
+  //Added this method to get the info from the server
+  public ServerInfo getInfo() {
+    return view.getInfo();
+  }
 }
