@@ -65,6 +65,8 @@ public final class Server {
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
+  //Added this line to create an instance of the server client
+  private static final ServerInfo info = new ServerInfo();
 
   private static final ServerInfo info = new ServerInfo();
 
@@ -216,10 +218,18 @@ public final class Server {
         try {
 
           LOG.info("Handling connection...");
-
+          
           final int type = Serializers.INTEGER.read(connection.in());
           final Command command = commands.get(type);
-
+          
+          /////////Added this section of code///////////
+          if (type == NetworkCode.SERVER_INFO_REQUEST) {
+        	  Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_RESPONSE);
+        	  Time.SERIALIZER.write(connection.out(), info.startTime);
+          }
+          ///add version check statements here
+     
+        ////////////////////////////////////////////////
           if (command == null) {
             // The message type cannot be handled so return a dummy message.
             Serializers.INTEGER.write(connection.out(), NetworkCode.NO_MESSAGE);

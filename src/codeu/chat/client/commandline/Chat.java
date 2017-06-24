@@ -223,7 +223,6 @@ public final class Chat {
             }
         }
     });
-
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
     return panel;
