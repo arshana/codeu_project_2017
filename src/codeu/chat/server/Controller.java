@@ -54,11 +54,6 @@ public final class Controller implements RawController, BasicController {
   public ConversationHeader newConversation(String title, Uuid owner) {
     return newConversation(createId(), title, owner, Time.now());
   }
-  /////Not sure what to do with this//////
-  public Interest newInterest(Uuid id, String type, String title) {
-		// TODO Auto-generated method stub
-		return null;
-  }
 
   @Override
   public Message newMessage(Uuid id, Uuid author, Uuid conversation, String body, Time creationTime) {
@@ -105,6 +100,25 @@ public final class Controller implements RawController, BasicController {
     return message;
   }
 
+  public Interest newInterest(Uuid id, String title, String type) {
+
+	  final User foundUser = model.userById().first(id);
+
+	  Interest interest = null;
+
+	  if (foundUser != null && isIdFree(id)) {
+
+		  interest = new Interest(id, title, type);
+		  model.add(interest);
+		  LOG.info("Interest added: %s", interest.id);
+
+	  } else {
+
+		  LOG.info("Interest additon failed");
+	  }
+	  return interest;
+  }
+  
   @Override
   public User newUser(Uuid id, String name, Time creationTime) {
 

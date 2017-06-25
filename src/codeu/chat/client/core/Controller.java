@@ -14,6 +14,11 @@
 
 package codeu.chat.client.core;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread;
@@ -29,6 +34,7 @@ import codeu.chat.util.Serializers;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
+import sun.misc.Queue;
 
 final class Controller implements BasicController {
 
@@ -39,7 +45,9 @@ final class Controller implements BasicController {
   public Controller(ConnectionSource source) {
     this.source = source;
   }
-
+  
+  Queue<String> queue = new Queue<String>();
+  
   @Override
   public Message newMessage(Uuid author, Uuid conversation, String body) {
 
@@ -51,6 +59,7 @@ final class Controller implements BasicController {
       Uuid.SERIALIZER.write(connection.out(), author);
       Uuid.SERIALIZER.write(connection.out(), conversation);
       Serializers.STRING.write(connection.out(), body);
+      queue.enqueue("ADD-MESSAGE Author: " + author + " Conversation: " + conversation + " Body: " + body);
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_MESSAGE_RESPONSE) {
         response = Serializers.nullable(Message.SERIALIZER).read(connection.in());
@@ -75,7 +84,8 @@ final class Controller implements BasicController {
 	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Serializers.STRING.write(connection.out(), type);
 	      Serializers.STRING.write(connection.out(), title);
-
+	      queue.enqueue("ADD-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
+	      
 	      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_INTEREST_RESPONSE) {
 	        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
 	      } else {
@@ -99,7 +109,8 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_REQUEST);
       Serializers.STRING.write(connection.out(), name);
       LOG.info("newUser: Request completed.");
-
+      queue.enqueue("ADD-USER Name: " + name);
+      
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_RESPONSE) {
         response = Serializers.nullable(User.SERIALIZER).read(connection.in());
         LOG.info("newUser: Response completed.");
@@ -124,7 +135,8 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVERSATION_REQUEST);
       Serializers.STRING.write(connection.out(), title);
       Uuid.SERIALIZER.write(connection.out(), owner);
-
+      queue.enqueue("ADD-CONVERSATION Title: " + title + " Owner: " + owner);
+      
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVERSATION_RESPONSE) {
         response = Serializers.nullable(ConversationHeader.SERIALIZER).read(connection.in());
       } else {
@@ -136,5 +148,52 @@ final class Controller implements BasicController {
     }
 
     return response;
+  }
+  
+  public Queue<String> getQueue(){
+	  return queue;
+  }
+  
+  public void printLog() throws InterruptedException{
+	  BufferedWriter bw = null;
+	  FileWriter fw = null;
+
+	  try {
+
+		  fw = new FileWriter("log.txt");
+		  bw = new BufferedWriter(fw);
+
+		  String newLine = queue.dequeue();
+		  while(newLine != null){
+			  bw.write(newLine + "\n");
+			  newLine = queue.dequeue();
+		  }
+
+	  } catch (IOException e) {
+
+		  e.printStackTrace();
+
+	  }
+  }
+  
+  public void readLog() throws InterruptedException{
+	  BufferedReader bw = null;
+	  FileReader fw = null;
+
+	  try {
+
+		  fw = new FileReader("log.txt");
+		  bw = new BufferedReader(fw);
+		  
+		  String line = bw.readLine();
+		  while(line != null){
+			  line = bw.readLine();
+		  }
+
+	  } catch (IOException e) {
+
+		  e.printStackTrace();
+
+	  }
   }
 }

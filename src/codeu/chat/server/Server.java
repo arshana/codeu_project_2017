@@ -209,7 +209,6 @@ public final class Server {
 
         final Uuid user = Uuid.SERIALIZER.read(in);
         final Collection<Uuid> interests = view.getInterests(user);
-        //How do I write the hash set
         Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
         Serializers.collection(Uuid.SERIALIZER).write(out, interests);
       }
