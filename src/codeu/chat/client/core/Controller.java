@@ -48,7 +48,7 @@ final class Controller implements BasicController {
     this.source = source;
   }
   
-  Queue<String> queue = new LinkedList();
+  Queue<String> queue = new LinkedList<String>();
   
   @Override
   public Message newMessage(Uuid author, Uuid conversation, String body) {
