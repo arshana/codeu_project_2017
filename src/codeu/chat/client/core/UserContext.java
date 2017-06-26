@@ -59,7 +59,7 @@ public final class UserContext {
     return all;
   }
 
-  public Iterable<Interest> interests(String id){
-    return view.getInterests(id);
+  public Iterable<Interest> interests(User user){
+    return view.getInterests(user);
   }
 }

@@ -79,20 +79,20 @@ public final class View implements BasicView, SinglesView {
   }
 
   @Override
-  public Collection<Interest> getInterests(String id){
+  public Collection<Interest> getInterests(User id){
     return null;
   }
-  
+
   public Collection<Uuid> getInterests(Uuid id) {
-	    Collection<Uuid> interests = new ArrayList<Uuid>();
-	    User user = findUser(id);
-	    if(user != null){
-		    for(Uuid u: user.interests){
-		    	interests.add(u);
-		    	
-		    }
-	    }
-	    return interests;
+    Collection<Uuid> interests = new ArrayList<Uuid>();
+    User user = findUser(id);
+    if(user != null) {
+      for (Uuid u : user.interests) {
+        interests.add(u);
+
+      }
+    }
+    return interests;
   }
 
   @Override

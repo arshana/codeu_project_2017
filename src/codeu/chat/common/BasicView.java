@@ -60,6 +60,6 @@ public interface BasicView {
   // GET STATUS UPDATE
   //
   //  Return all interests belonging to user with given Uuid
-  Collection<Interest> getInterests(String id);
+  Collection<Interest> getInterests(User user);
 
 }

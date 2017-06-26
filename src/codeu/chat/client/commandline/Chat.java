@@ -486,7 +486,7 @@ public final class Chat {
     panel.register("show-status-update", new Panel.Command() {
      @Override
      public void invoke(List<String> args){
-       for (final Interest interest : user.interests(user.user.name)) {
+       for (final Interest interest : user.interests(user.user)) {
          System.out.format(
                  "INTEREST %s %s (UUID:%s)\n",
                  interest.title,
