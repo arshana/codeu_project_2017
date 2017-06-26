@@ -93,6 +93,18 @@ public final class View implements BasicView, SinglesView {
 	    }
 	    return interests;
   }
+  
+  public Collection<Uuid> getInterests(Uuid id) {
+	    Collection<Uuid> interests = new ArrayList<Uuid>();
+	    User user = findUser(id);
+	    if(user != null){
+		    for(Uuid u: user.interests){
+		    	interests.add(u);
+		    	
+		    }
+	    }
+	    return interests;
+  }
 
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }

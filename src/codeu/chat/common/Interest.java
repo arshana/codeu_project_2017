@@ -11,16 +11,16 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 public class Interest {
+	
+	  public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
 
-    public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
-
-        @Override
+		@Override
 		public void write(OutputStream out, Interest value) throws IOException {
-            Uuid.SERIALIZER.write(out, value.id);
-            Serializers.STRING.write(out, value.title);
-            Serializers.STRING.write(out, value.type);
-
-        }
+			 Uuid.SERIALIZER.write(out, value.id);
+		      Serializers.STRING.write(out, value.title);
+		      Serializers.STRING.write(out, value.type);
+			
+		}
 
 		@Override
 		public Interest read(InputStream in) throws IOException {
@@ -30,18 +30,18 @@ public class Interest {
 			          Serializers.STRING.read(in)
 			      );
 		}
-    };
+	  };
 
-    public final Uuid id;
-    public final String title;
-    public final String type;
+	  public final Uuid id;
+	  public final String title;
+	  public final String type;
 
-    public Interest(Uuid id, String title, String type) {
+	  public Interest(Uuid id, String title, String type) {
 
 	    this.id = id;
 	    this.type = type;
 	    this.title = title;
 
-    }
+	  }
 }
 	
