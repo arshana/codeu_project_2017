@@ -77,6 +77,11 @@ public final class View implements BasicView, SinglesView {
   public ServerInfo getInfo(){
     return info;
   }
+  
+  @Override
+  public Collection<Interest> getInterests(String id){
+    return null;
+  }
 
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }
