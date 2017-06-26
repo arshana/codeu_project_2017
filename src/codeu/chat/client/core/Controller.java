@@ -112,6 +112,7 @@ final class Controller implements BasicController {
       Serializers.STRING.write(connection.out(), name);
       LOG.info("newUser: Request completed.");
       queue.add("ADD-USER Name: " + name);
+      printLog();
       
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_RESPONSE) {
         response = Serializers.nullable(User.SERIALIZER).read(connection.in());
@@ -178,6 +179,7 @@ final class Controller implements BasicController {
 	  }
   }
   
+  //when do I call this method? How can I tell when the server is down?
   public void readLog() throws InterruptedException{
 	  BufferedReader bw = null;
 	  FileReader fw = null;
@@ -190,6 +192,7 @@ final class Controller implements BasicController {
 		  String line = bw.readLine();
 		  while(line != null){
 			  line = bw.readLine();
+			  queue.add(line);
 		  }
 
 	  } catch (IOException e) {
