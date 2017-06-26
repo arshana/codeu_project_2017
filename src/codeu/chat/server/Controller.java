@@ -19,6 +19,7 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
@@ -99,6 +100,25 @@ public final class Controller implements RawController, BasicController {
     return message;
   }
 
+  public Interest newInterest(Uuid id, String title, String type) {
+
+	  final User foundUser = model.userById().first(id);
+
+	  Interest interest = null;
+
+	  if (foundUser != null && isIdFree(id)) {
+
+		  interest = new Interest(id, title, type);
+		  model.add(interest);
+		  LOG.info("Interest added: %s", interest.id);
+
+	  } else {
+
+		  LOG.info("Interest additon failed");
+	  }
+	  return interest;
+  }
+  
   @Override
   public User newUser(Uuid id, String name, Time creationTime) {
 
