@@ -83,17 +83,6 @@ public final class View implements BasicView, SinglesView {
     return null;
   }
   
-  @SuppressWarnings("null")
-  public Collection<Uuid> getInterests(Uuid id) {
-	    Collection<Uuid> interests = null;
-	    User user = findUser(id);
-	    for(Uuid u: user.interests){
-	    	interests.add(u);
-	    	
-	    }
-	    return interests;
-  }
-  
   public Collection<Uuid> getInterests(Uuid id) {
 	    Collection<Uuid> interests = new ArrayList<Uuid>();
 	    User user = findUser(id);
