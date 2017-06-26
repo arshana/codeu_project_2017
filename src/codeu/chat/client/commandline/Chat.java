@@ -358,19 +358,15 @@ public final class Chat {
     panel.register("show-status-update", new Panel.Command() {
      @Override
      public void invoke(List<String> args){
-       String name = args.get(0);
-       //print out status-update
-       //for (final Interest interest : user.interests(Uuid.parse(name))) {
-       for (final Interest interest : user.interests(name)) {
-           System.out.format(
-                   "INTEREST %s %s (UUID:%s)\n",
-                   interest.title,
-                   interest.type,
-                   interest.id);
+       for (final Interest interest : user.interests(user.user.name)) {
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
        }
      }
     });
-
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
