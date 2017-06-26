@@ -28,8 +28,8 @@ import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.User;
 import codeu.chat.util.Tokenizer;
-import codeu.chat.util.User;
 import codeu.chat.util.Uuid;
 
 
@@ -360,12 +360,13 @@ public final class Chat {
      public void invoke(List<String> args){
        String name = args.get(0);
        //print out status-update
-       for (final Interest interest : user.interests(Uuid.parse(name))) {
-         System.out.format(
-                 "INTEREST %s %s (UUID:%s)\n",
-                 interest.title,
-                 interest.type,
-                 interest.id);
+       //for (final Interest interest : user.interests(Uuid.parse(name))) {
+       for (final Interest interest : user.interests(name)) {
+           System.out.format(
+                   "INTEREST %s %s (UUID:%s)\n",
+                   interest.title,
+                   interest.type,
+                   interest.id);
        }
      }
     });
