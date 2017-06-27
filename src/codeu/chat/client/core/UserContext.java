@@ -61,7 +61,7 @@ public final class UserContext {
   }
 
   public Interest create(Uuid id, String name, String type) {
-    final Interest interest = controller.newInterest(id, type, name);
+    final Interest interest = controller.newInterest(id, user.id, type, name);
 
     return interest == null ?
             null :

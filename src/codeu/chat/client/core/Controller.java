@@ -77,13 +77,14 @@ final class Controller implements BasicController {
   }
 
   @Override
-  public Interest newInterest(Uuid id, String type, String title) {
+  public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
 
 	    Interest response = null;
 
 	    try (final Connection connection = source.connect()) {
 
 	      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
+	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Serializers.STRING.write(connection.out(), type);
 	      Serializers.STRING.write(connection.out(), title);

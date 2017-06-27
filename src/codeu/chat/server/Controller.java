@@ -101,7 +101,7 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public Interest newInterest(Uuid id, String title, String type) {
+  public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
 
 	  final User foundUser = model.userById().first(id);
 
@@ -109,7 +109,7 @@ public final class Controller implements RawController, BasicController {
 
 	  if (foundUser != null && isIdFree(id)) {
 
-		  interest = new Interest(id, title, type);
+		  interest = new Interest(id, userid, title, type);
 		  model.add(interest);
 		  LOG.info("Interest added: %s", interest.id);
 

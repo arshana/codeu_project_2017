@@ -58,5 +58,5 @@ public interface BasicController {
   //  operation is successful, an Interest object will be returned
   //  representing the full state of the interest on the server.
   //  Whether interests can have the same title is undefined.
-  Interest newInterest(Uuid id, String type, String title);
+  Interest newInterest(Uuid id, Uuid userid, String title, String type);
 }
