@@ -63,7 +63,7 @@ public final class Server {
 
   private final Model model = new Model();
   private final View view = new View(model);
-  private final Controller controller;
+  public final Controller controller;
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;

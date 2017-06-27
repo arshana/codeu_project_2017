@@ -38,7 +38,7 @@ import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
 
-final class Controller implements BasicController {
+final class Controller implements BasicController{
 
   private final static Logger.Log LOG = Logger.newLog(Controller.class);
 
@@ -48,11 +48,23 @@ final class Controller implements BasicController {
     this.source = source;
   }
   
-  Queue<String> queue = new LinkedList<String>();
+  static BufferedWriter bw = null;
+  static FileWriter fw = null;
+  
+  static {
+      try {
+          
+          fw = new FileWriter("log.txt", true);
+          bw = new BufferedWriter(fw);
+          
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+  }
   
   @Override
   public Message newMessage(Uuid author, Uuid conversation, String body) {
-
     Message response = null;
 
     try (final Connection connection = source.connect()) {
@@ -61,8 +73,9 @@ final class Controller implements BasicController {
       Uuid.SERIALIZER.write(connection.out(), author);
       Uuid.SERIALIZER.write(connection.out(), conversation);
       Serializers.STRING.write(connection.out(), body);
-      queue.add("ADD-MESSAGE Author: " + author + " Conversation: " + conversation + " Body: " + body);
-
+      bw.write("ADD-MESSAGE " + author + " " + conversation + " " + body+ "\n");
+      bw.flush();
+      
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_MESSAGE_RESPONSE) {
         response = Serializers.nullable(Message.SERIALIZER).read(connection.in());
       } else {
@@ -77,7 +90,7 @@ final class Controller implements BasicController {
   }
   
   public Interest newInterest(Uuid id, String type, String title) {
-
+	  
 	    Interest response = null;
 
 	    try (final Connection connection = source.connect()) {
@@ -86,7 +99,8 @@ final class Controller implements BasicController {
 	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Serializers.STRING.write(connection.out(), type);
 	      Serializers.STRING.write(connection.out(), title);
-	      queue.add("ADD-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
+	      bw.write("ADD-INTEREST " + id + " " + type + " " + title + "\n");
+	      bw.flush();
 	      
 	      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_INTEREST_RESPONSE) {
 	        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
@@ -111,7 +125,8 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_REQUEST);
       Serializers.STRING.write(connection.out(), name);
       LOG.info("newUser: Request completed.");
-      queue.add("ADD-USER Name: " + name);
+      bw.write("ADD-USER " + name + "\n");
+      bw.flush();
       
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_RESPONSE) {
         response = Serializers.nullable(User.SERIALIZER).read(connection.in());
@@ -137,7 +152,8 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVERSATION_REQUEST);
       Serializers.STRING.write(connection.out(), title);
       Uuid.SERIALIZER.write(connection.out(), owner);
-      queue.add("ADD-CONVERSATION Title: " + title + " Owner: " + owner);
+      bw.write("ADD-CONVERSATION " + title + " " + owner + "\n");
+      bw.flush();
       
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVERSATION_RESPONSE) {
         response = Serializers.nullable(ConversationHeader.SERIALIZER).read(connection.in());
@@ -150,53 +166,5 @@ final class Controller implements BasicController {
     }
 
     return response;
-  }
-  
-  public Queue<String> getQueue(){
-	  return queue;
-  }
-  
-  public void printLog() throws InterruptedException{
-	  BufferedWriter bw = null;
-	  FileWriter fw = null;
-
-	  try {
-
-		  fw = new FileWriter("log.txt");
-		  bw = new BufferedWriter(fw);
-
-		  String newLine = queue.remove();
-		  while(newLine != null){
-			  bw.write(newLine + "\n");
-			  newLine = queue.remove();
-		  }
-
-	  } catch (IOException e) {
-		  e.printStackTrace();
-
-	  }
-  }
-  
-  //when do I call this method? How can I tell when the server is down?
-  public void readLog() throws InterruptedException{
-	  BufferedReader bw = null;
-	  FileReader fw = null;
-
-	  try {
-
-		  fw = new FileReader("log.txt");
-		  bw = new BufferedReader(fw);
-		  
-		  String line = bw.readLine();
-		  while(line != null){
-			  line = bw.readLine();
-			  queue.add(line);
-		  }
-
-	  } catch (IOException e) {
-
-		  e.printStackTrace();
-
-	  }
   }
 }
