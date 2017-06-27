@@ -100,6 +100,7 @@ public final class Controller implements RawController, BasicController {
     return message;
   }
 
+  @Override
   public Interest newInterest(Uuid id, String title, String type) {
 
 	  final User foundUser = model.userById().first(id);

@@ -96,7 +96,9 @@ public final class View implements BasicView, SinglesView {
     LOG.info("server.view" + user.interests.size());
     //return interests;
     return user.interests;*/
-    return intersect(model.interestById(), ids);
+    //return intersect(model.interestById(), ids);
+    LOG.info("" + all(model.interestById()).size());
+    return all(model.interestById());
   }
 
   @Override

@@ -75,7 +75,8 @@ final class Controller implements BasicController {
 
     return response;
   }
-  
+
+  @Override
   public Interest newInterest(Uuid id, String type, String title) {
 
 	    Interest response = null;
