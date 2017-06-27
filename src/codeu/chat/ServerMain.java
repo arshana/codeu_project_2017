@@ -124,10 +124,11 @@ final class ServerMain {
     			server.controller.newMessage(author, conversation, body);
     		} else if(input[0].equals("ADD-INTEREST")){
     			Uuid id1 = Uuid.parse(input[1]);
-    			String type = input[2];
+    			Uuid id2 = Uuid.parse(input[2]);
+    			String type = input[3];
     		    String title = input[3];
     		    //create interest
-    		    server.controller.newInterest(id1, type, title);
+    		    server.controller.newInterest(id1, id2, type, title);
     		} else if(input[0].equals("ADD-USER")){
     			String name = input[1];
     			System.out.println(name);

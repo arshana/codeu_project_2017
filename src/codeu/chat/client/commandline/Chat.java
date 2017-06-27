@@ -326,20 +326,28 @@ public final class Chat {
           if(type.equals("c")){
             final ConversationContext conversation = find(name);
             if(!(conversation == null)){
-              final Interest interest = new Interest(conversation.conversation.id, name, type);
-              user.user.interests.add(interest);
-              System.out.println("Conversation " + name + " added");
+              if (user.create(conversation.conversation.id, name, type) == null) {
+                System.out.println("ERROR: Failed to create new interest");
+              } else {
+                //final Interest interest = new Interest(conversation.conversation.id, name, type);
+                //user.user.interests.add(interest);
+                System.out.println("Conversation " + name + " added");
+              }
             }  
-            else{
+            else {
               System.out.format("ERROR: No conversation with name '%s'\n", name);
             } //add the UUID of conversation to the HashSet
           }
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              final Interest interest = new Interest(u.id, name, type);
-              user.user.interests.add(interest);
-              System.out.println("User " + name + " added");
+              if (user.create(u.id, name, type) == null) {
+                System.out.println("ERROR: Failed to create new interest");
+              } else {
+                //final Interest interest = new Interest(u.id, name, type);
+                //user.user.interests.add(interest);
+                System.out.println("User " + name + " added");
+              }
             } //add the UUID of the user to the HashSet
             else{
               System.out.format("ERROR: No user with name '%s'\n", name);
@@ -488,8 +496,8 @@ public final class Chat {
     panel.register("show-status-update", new Panel.Command() {
      @Override
      public void invoke(List<String> args){
-       //System.out.println("chat" + user.user.id.toString());
-       for (final Interest interest : user.interests(user.user.id)) {
+       System.out.println("chat" + user.user.id.toString());
+       for (final Interest interest : user.interests()) {
          System.out.format(
                  "INTEREST %s %s (UUID:%s)\n",
                  interest.title,

@@ -80,23 +80,7 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public Collection<Interest> getInterests(Collection<Uuid> ids) {
-    /*LOG.info("view" + id.toString());
-    Collection<Interest> interests = new ArrayList<Interest>();
-    User user = findUser(id);
-    LOG.info("viewsecondtime: " + user.id.toString());
-    if(user != null) {
-      for (Interest u : user.interests) {
-        LOG.info("serv.view" + user.interests.size());
-        interests.add(u);
-      }
-    }
-    else {
-      LOG.error("ERROR: Invalid user id.");
-    }
-    LOG.info("server.view" + user.interests.size());
-    //return interests;
-    return user.interests;*/
-    return intersect(model.interestById(), ids);
+    return intersect(model.interestByUserId(), ids);
   }
 
   @Override
@@ -129,6 +113,7 @@ public final class View implements BasicView, SinglesView {
     for (final Uuid id : ids) {
 
       final T t = store.first(id);
+      LOG.info("" + id.toString());
 
       if (t == null) {
         LOG.warning("Unmapped id %s", id);
