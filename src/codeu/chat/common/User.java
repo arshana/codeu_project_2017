@@ -55,14 +55,14 @@ public final class User {
   public final Uuid id;
   public final String name;
   public final Time creation;
-  public final Set<Uuid> interests;
+  public final Set<Interest> interests;
 
   public User(Uuid id, String name, Time creation) {
 
     this.id = id;
     this.name = name;
     this.creation = creation;
-    this.interests = new HashSet<Uuid>();
+    this.interests = new HashSet<Interest>();
 
   }
 }

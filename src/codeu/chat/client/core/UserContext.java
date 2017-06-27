@@ -14,6 +14,7 @@
 
 package codeu.chat.client.core;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -59,7 +60,7 @@ public final class UserContext {
     return all;
   }
 
-  public Iterable<Interest> interests(User user){
-    return view.getInterests(user);
+  public Collection<Interest> interests(Uuid id){
+    return view.getInterests(Arrays.asList(id));
   }
 }

@@ -79,20 +79,24 @@ public final class View implements BasicView, SinglesView {
   }
 
   @Override
-  public Collection<Interest> getInterests(User id){
-    return null;
-  }
-
-  public Collection<Uuid> getInterests(Uuid id) {
-    Collection<Uuid> interests = new ArrayList<Uuid>();
+  public Collection<Interest> getInterests(Collection<Uuid> ids) {
+    /*LOG.info("view" + id.toString());
+    Collection<Interest> interests = new ArrayList<Interest>();
     User user = findUser(id);
+    LOG.info("viewsecondtime: " + user.id.toString());
     if(user != null) {
-      for (Uuid u : user.interests) {
+      for (Interest u : user.interests) {
+        LOG.info("serv.view" + user.interests.size());
         interests.add(u);
-
       }
     }
-    return interests;
+    else {
+      LOG.error("ERROR: Invalid user id.");
+    }
+    LOG.info("server.view" + user.interests.size());
+    //return interests;
+    return user.interests;*/
+    return intersect(model.interestById(), ids);
   }
 
   @Override

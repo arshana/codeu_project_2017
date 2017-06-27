@@ -132,8 +132,20 @@ public final class Model {
   }
   
   public void add(Interest interest) {
-	    interestById.insert(interest.id, interest);
-	    interestByType.insert(interest.type, interest);
-	    interestByTitle.insert(interest.title, interest);
-	  }
+    interestById.insert(interest.id, interest);
+    interestByType.insert(interest.type, interest);
+    interestByTitle.insert(interest.title, interest);
+  }
+
+  public StoreAccessor<Uuid, Interest> interestById() {
+    return interestById;
+  }
+
+  public StoreAccessor<String, Interest> interestByType() {
+    return interestByType;
+  }
+
+  public StoreAccessor<String, Interest> interestByTitle() {
+    return interestByTitle;
+  }
 }

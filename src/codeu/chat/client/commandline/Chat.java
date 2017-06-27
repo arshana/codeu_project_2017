@@ -326,7 +326,8 @@ public final class Chat {
           if(type.equals("c")){
             final ConversationContext conversation = find(name);
             if(!(conversation == null)){
-              user.user.interests.add(conversation.conversation.id);
+              final Interest interest = new Interest(conversation.conversation.id, name, type);
+              user.user.interests.add(interest);
               System.out.println("Conversation " + name + " added");
             }  
             else{
@@ -336,7 +337,8 @@ public final class Chat {
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              user.user.interests.add(u.id);
+              final Interest interest = new Interest(u.id, name, type);
+              user.user.interests.add(interest);
               System.out.println("User " + name + " added");
             } //add the UUID of the user to the HashSet
             else{
@@ -486,13 +488,22 @@ public final class Chat {
     panel.register("show-status-update", new Panel.Command() {
      @Override
      public void invoke(List<String> args){
-       for (final Interest interest : user.interests(user.user)) {
+       //System.out.println("chat" + user.user.id.toString());
+       for (final Interest interest : user.interests(user.user.id)) {
          System.out.format(
                  "INTEREST %s %s (UUID:%s)\n",
                  interest.title,
                  interest.type,
                  interest.id);
        }
+       /*for (Interest interest : user.user.interests){
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
+       }*/
+       //System.out.println(user.interests(user.user.id).size());
      }
     });
 

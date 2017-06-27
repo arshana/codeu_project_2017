@@ -208,10 +208,10 @@ public final class Server {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
 
-        final Uuid user = Uuid.SERIALIZER.read(in);
-        final Collection<Uuid> interests = view.getInterests(user);
+        final Collection<Uuid> ids = Serializers.collection(Uuid.SERIALIZER).read(in);
+        final Collection<Interest> interests = view.getInterests(ids);
         Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
-        Serializers.collection(Uuid.SERIALIZER).write(out, interests);
+        Serializers.collection(Interest.SERIALIZER).write(out, interests);
       }
     });
 
