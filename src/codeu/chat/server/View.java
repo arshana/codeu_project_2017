@@ -77,10 +77,11 @@ public final class View implements BasicView, SinglesView {
   public ServerInfo getInfo(){
     return info;
   }
-  
+
   @Override
-  public Collection<Interest> getInterests(String id){
-    return null;
+  public Collection<Interest> getInterests(Collection<Uuid> ids) {
+    LOG.info("" + all(model.interestByUserId()).size());
+    return intersect(model.interestByUserId(), ids);
   }
 
   @Override
@@ -113,6 +114,8 @@ public final class View implements BasicView, SinglesView {
     for (final Uuid id : ids) {
 
       final T t = store.first(id);
+      LOG.info("" + id.toString());
+      LOG.info(t + "");
 
       if (t == null) {
         LOG.warning("Unmapped id %s", id);

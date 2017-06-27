@@ -11,37 +11,41 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 public class Interest {
+	
+	public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
 
-    public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
+		@Override
+		public void write(OutputStream out, Interest value) throws IOException {
+			Uuid.SERIALIZER.write(out, value.id);
+			Uuid.SERIALIZER.write(out, value.userid);
+			Serializers.STRING.write(out, value.title);
+			Serializers.STRING.write(out, value.type);
+			
+		}
 
-        @Override
-        public void write(OutputStream out, Interest value) throws IOException {
-            Uuid.SERIALIZER.write(out, value.id);
-            Serializers.STRING.write(out, value.title);
-            Serializers.STRING.write(out, value.type);
+		@Override
+		public Interest read(InputStream in) throws IOException {
+			return new Interest(
+					Uuid.SERIALIZER.read(in),
+					Uuid.SERIALIZER.read(in),
+					Serializers.STRING.read(in),
+					Serializers.STRING.read(in)
+			);
+		}
+	};
 
-        }
+	public final Uuid id;
+	public final Uuid userid;
+	public final String title;
+	public final String type;
 
-        @Override
-        public Interest read(InputStream in) throws IOException {
-            return new Interest(
-                    Uuid.SERIALIZER.read(in),
-                    Serializers.STRING.read(in),
-                    Serializers.STRING.read(in)
-            );
-        }
-    };
+	public Interest(Uuid id, Uuid userid, String title, String type) {
 
-    public final Uuid id;
-    public final String title;
-    public final String type;
+	    this.id = id;
+	    this.userid = userid;
+	    this.type = type;
+	    this.title = title;
 
-    public Interest(Uuid id, String title, String type) {
-
-        this.id = id;
-        this.type = type;
-        this.title = title;
-
-    }
+	}
 }
 	

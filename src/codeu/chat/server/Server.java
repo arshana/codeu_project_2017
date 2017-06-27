@@ -23,10 +23,12 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
@@ -184,6 +186,36 @@ public final class Server {
     	  Uuid.SERIALIZER.write(out, info.version);
     	  Time.SERIALIZER.write(out, info.startTime);
     	}
+    });
+    
+ // New Interest - A client wants to add a new interest to the back end.
+    this.commands.put(NetworkCode.NEW_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid id = Uuid.SERIALIZER.read(in);
+        final Uuid userid = Uuid.SERIALIZER.read(in);
+        final String type = Serializers.STRING.read(in);
+        final String title = Serializers.STRING.read(in);
+        LOG.info(userid + " from server");
+        final Interest interest = controller.newInterest(id, userid, title, type);
+        LOG.info(interest + "");
+        
+        Serializers.INTEGER.write(out, NetworkCode.NEW_INTEREST_RESPONSE);
+        Serializers.nullable(Interest.SERIALIZER).write(out, interest);
+      }
+    });
+    
+ // Get Interest - A client wants to get interests from the back end.
+    this.commands.put(NetworkCode.GET_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Collection<Uuid> ids = Serializers.collection(Uuid.SERIALIZER).read(in);
+        final Collection<Interest> interests = view.getInterests(ids);
+        Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
+        Serializers.collection(Interest.SERIALIZER).write(out, interests);
+      }
     });
 
     this.timeline.scheduleNow(new Runnable() {

@@ -14,6 +14,7 @@
 
 package codeu.chat.client.core;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,6 +44,10 @@ public final class UserContext {
         new ConversationContext(user, conversation, view, controller);
   }
 
+  public Collection<User> users() {
+    return view.getUsers();
+  }
+
   public Iterable<ConversationContext> conversations() {
 
     // Use all the ids to get all the conversations and convert them to
@@ -55,7 +60,11 @@ public final class UserContext {
     return all;
   }
 
-  public Iterable<Interest> interests(String id){
-    return view.getInterests(id);
+  public Interest create(Uuid id, Uuid userid, String name, String type) {
+    return this.controller.newInterest(id, userid, name, type);
+  }
+
+  public Collection<Interest> interests(){
+    return view.getInterests(Arrays.asList(user.id));
   }
 }
