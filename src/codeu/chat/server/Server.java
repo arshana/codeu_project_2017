@@ -198,6 +198,7 @@ public final class Server {
         final String type = Serializers.STRING.read(in);
         final String title = Serializers.STRING.read(in);
         final Interest interest = controller.newInterest(id, userid, title, type);
+        LOG.info(interest + "");
         
         Serializers.INTEGER.write(out, NetworkCode.NEW_INTEREST_RESPONSE);
         Serializers.nullable(Interest.SERIALIZER).write(out, interest);

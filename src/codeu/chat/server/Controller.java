@@ -103,21 +103,22 @@ public final class Controller implements RawController, BasicController {
   @Override
   public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
 
-	  final User foundUser = model.userById().first(id);
+    final User foundUser = model.userById().first(userid);
 
-	  Interest interest = null;
+    Interest interest = null;
 
-	  if (foundUser != null && isIdFree(id)) {
+    //if (foundUser != null && isIdFree(id)) {
+    if (foundUser != null) {
 
-		  interest = new Interest(id, userid, title, type);
-		  model.add(interest);
-		  LOG.info("Interest added: %s", interest.id);
+      interest = new Interest(id, userid, title, type);
+      model.add(interest);
+      LOG.info("Interest added: %s", interest.id);
 
-	  } else {
+    } else {
 
-		  LOG.info("Interest additon failed");
-	  }
-	  return interest;
+      LOG.info("Interest additon failed");
+    }
+    return interest;
   }
   
   @Override
