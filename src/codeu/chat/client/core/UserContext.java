@@ -61,14 +61,10 @@ public final class UserContext {
   }
 
   public Interest create(Uuid id, String name, String type) {
-    final Interest interest = controller.newInterest(id, user.id, type, name);
-
-    return interest == null ?
-            null :
-            interest;
+    return this.controller.newInterest(id, user.id, type, name);
   }
 
-  public Collection<Interest> interests(Uuid id){
-    return view.getInterests(Arrays.asList(id));
+  public Collection<Interest> interests(){
+    return view.getInterests(Arrays.asList(user.id));
   }
 }
