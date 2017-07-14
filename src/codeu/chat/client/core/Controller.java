@@ -79,15 +79,15 @@ final class Controller implements BasicController {
   @Override
   public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
 
-	    Interest response = null;
+      Interest response = null;
 
-	    try (final Connection connection = source.connect()) {
+      try (final Connection connection = source.connect()) {
 
-	      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
+          Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
 	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Uuid.SERIALIZER.write(connection.out(), userid);
-	      Serializers.STRING.write(connection.out(), type);
 	      Serializers.STRING.write(connection.out(), title);
+	      Serializers.STRING.write(connection.out(), type);
 	      LOG.info(userid +" from core.controller");
 	      queue.add("ADD-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
 	      
@@ -96,13 +96,30 @@ final class Controller implements BasicController {
 	      } else {
 	        LOG.error("Response from server failed.");
 	      }
-	    } catch (Exception ex) {
+      } catch (Exception ex) {
 	      System.out.println("ERROR: Exception during call on server. Check log for details.");
 	      LOG.error(ex, "Exception during call on server.");
-	    }
+      }
+      return response;
+  }
 
-	    return response;
-	  }
+  @Override
+  public void removeInterest(Uuid id, Uuid userid, String title, String type) {
+
+      try (final Connection connection = source.connect()) {
+
+          Serializers.INTEGER.write(connection.out(), NetworkCode.REMOVE_INTEREST_REQUEST);
+          Uuid.SERIALIZER.write(connection.out(), id);
+          Uuid.SERIALIZER.write(connection.out(), userid);
+          Serializers.STRING.write(connection.out(), type);
+          Serializers.STRING.write(connection.out(), title);
+          queue.add("REMOVE-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
+
+      } catch (Exception ex) {
+          System.out.println("ERROR: Exception during call on server. Check log for details.");
+          LOG.error(ex, "Exception during call on server.");
+      }
+  }
 
   @Override
   public User newUser(String name) {

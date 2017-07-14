@@ -205,6 +205,21 @@ public final class Server {
         Serializers.nullable(Interest.SERIALIZER).write(out, interest);
       }
     });
+
+    // Remove Interest - A client wants to remove an interest from the back end.
+    this.commands.put(NetworkCode.REMOVE_INTEREST_REQUEST, new Command(){
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+        final Uuid id = Uuid.SERIALIZER.read(in);
+        final Uuid userid = Uuid.SERIALIZER.read(in);
+        final String title = Serializers.STRING.read(in);
+        final String type = Serializers.STRING.read(in);
+
+        controller.removeInterest(id, userid, title, type);
+
+      }
+    });
     
  // Get Interest - A client wants to get interests from the back end.
     this.commands.put(NetworkCode.GET_INTEREST_REQUEST, new Command() {
@@ -213,6 +228,8 @@ public final class Server {
 
         final Collection<Uuid> ids = Serializers.collection(Uuid.SERIALIZER).read(in);
         final Collection<Interest> interests = view.getInterests(ids);
+
+        LOG.info("server" + interests.size());
         Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
         Serializers.collection(Interest.SERIALIZER).write(out, interests);
       }

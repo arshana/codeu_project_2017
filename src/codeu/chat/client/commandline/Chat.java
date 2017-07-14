@@ -401,7 +401,7 @@ public final class Chat {
           if(type.equals("c")){
             final ConversationContext conversation = find(name);
             if(!(conversation == null)){
-              user.user.interests.remove(conversation.conversation.id);
+              user.remove(conversation.conversation.id, user.user.id, name, type);
               System.out.println("Conversation " + name + " removed");
             } //remove the UUID of conversation to the HashSet
             else{
@@ -411,7 +411,7 @@ public final class Chat {
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              user.user.interests.remove(u.id);
+              user.remove(u.id, user.user.id, name, type);
               System.out.println("User " + name + " removed");
             } //remove the UUID of the user to the HashSet
             else{

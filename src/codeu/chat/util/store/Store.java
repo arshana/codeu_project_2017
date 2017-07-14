@@ -67,6 +67,28 @@ public final class Store<KEY, VALUE> implements StoreAccessor<KEY, VALUE> {
     }
   }
 
+  //in progress
+  public void removeInterest(KEY key, VALUE value) {
+    //get storelink value associated w/ key
+    //storelink = root of linkedlist
+    //go through and remove the interest = value
+    //index.remove(key);
+    //index.put(newKey);
+    StoreLink<KEY, VALUE> root = index.get(key);
+    StoreLink<KEY, VALUE> current = root;
+    boolean found = false;
+    if(current != null && value != null) {
+      while (current != null && !found) {
+        if (!current.value.equals(value)) {
+          current = current.next;
+        } else {
+          found = true;
+        }
+      }
+
+    }
+  }
+
   @Override
   public VALUE first(KEY key) {
     final StoreLink<KEY, VALUE> link = index.get(key);

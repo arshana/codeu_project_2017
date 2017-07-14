@@ -64,6 +64,10 @@ public final class UserContext {
     return this.controller.newInterest(id, userid, name, type);
   }
 
+  public void remove(Uuid id, Uuid userid, String name, String type) {
+    this.controller.removeInterest(id, userid, name, type);
+  }
+
   public Collection<Interest> interests(){
     return view.getInterests(Arrays.asList(user.id));
   }

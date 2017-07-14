@@ -139,6 +139,13 @@ public final class Model {
     interestByTitle.insert(interest.title, interest);
   }
 
+  public void remove(Interest interest) {
+    interestById.removeInterest(interest.id, interest);
+    interestByUserId.removeInterest(interest.userid, interest);
+    interestByType.removeInterest(interest.type, interest);
+    interestByTitle.removeInterest(interest.title, interest);
+  }
+
   public StoreAccessor<Uuid, Interest> interestById() {
     return interestById;
   }
