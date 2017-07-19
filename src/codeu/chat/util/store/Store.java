@@ -74,18 +74,22 @@ public final class Store<KEY, VALUE> implements StoreAccessor<KEY, VALUE> {
     //go through and remove the interest = value
     //index.remove(key);
     //index.put(newKey);
-    StoreLink<KEY, VALUE> root = index.get(key);
-    StoreLink<KEY, VALUE> current = root;
-    boolean found = false;
-    if(current != null && value != null) {
-      while (current != null && !found) {
-        if (!current.value.equals(value)) {
-          current = current.next;
-        } else {
-          found = true;
+    StoreLink<KEY, VALUE> current = index.get(key);
+    if (current.value.equals(value)){
+      current = current.next;
+      index.put(key, current);
+    }
+    else {
+      current = current.next;
+      StoreLink<KEY, VALUE> prev = index.get(key);
+      while (current != null) {
+        if (current.value.equals(value)) {
+          prev.next = current.next;
+          return;
         }
+        prev = prev.next;
+        current = current.next;
       }
-
     }
   }
 
