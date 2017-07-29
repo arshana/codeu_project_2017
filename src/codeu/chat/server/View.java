@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.SinglesView;
@@ -71,9 +72,16 @@ public final class View implements BasicView, SinglesView {
   public Collection<Message> getMessages(Collection<Uuid> ids) {
     return intersect(model.messageById(), ids);
   }
-  
+
+  @Override
   public ServerInfo getInfo(){
     return info;
+  }
+
+  @Override
+  public Collection<Interest> getInterests(Collection<Uuid> ids) {
+    LOG.info("" + all(model.interestByUserId()).size());
+    return intersect(model.interestByUserId(), ids);
   }
 
   @Override
@@ -106,6 +114,8 @@ public final class View implements BasicView, SinglesView {
     for (final Uuid id : ids) {
 
       final T t = store.first(id);
+      LOG.info("" + id.toString());
+      LOG.info(t + "");
 
       if (t == null) {
         LOG.warning("Unmapped id %s", id);
