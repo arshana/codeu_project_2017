@@ -80,7 +80,6 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public Collection<Interest> getInterests(Collection<Uuid> ids) {
-    LOG.info("" + all(model.interestByUserId()).size());
     return intersect(model.interestByUserId(), ids);
   }
 
@@ -115,7 +114,6 @@ public final class View implements BasicView, SinglesView {
 
       final T t = store.first(id);
       LOG.info("" + id.toString());
-      LOG.info(t + "");
 
       if (t == null) {
         LOG.warning("Unmapped id %s", id);
@@ -125,7 +123,6 @@ public final class View implements BasicView, SinglesView {
         LOG.warning("Duplicate id %s", id);
       }
     }
-
     return found;
   }
 }

@@ -111,8 +111,6 @@ public final class Controller implements RawController, BasicController {
     if (foundUser != null) {
 
       interest = new Interest(id, userid, title, type);
-      LOG.info("serv.controll" + userid + " " + title);
-      LOG.info("serv.controll" + id + " " + title);
       model.add(interest);
       LOG.info("Interest added: %s", interest.id);
 
@@ -129,9 +127,7 @@ public final class Controller implements RawController, BasicController {
     if (foundUser != null){
       model.remove(new Interest(id, userid, title, type));
       LOG.info("Interest removed: %s", id);
-    }
-
-    else{
+    } else{
       LOG.info("Interest removal failed");
     }
   }

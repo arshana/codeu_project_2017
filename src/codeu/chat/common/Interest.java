@@ -47,7 +47,7 @@ public class Interest {
 	    this.title = title;
 
 	}
-
+  
 	@Override
 	public boolean equals(Object obj){
 		if (obj instanceof Interest){

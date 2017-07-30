@@ -328,8 +328,6 @@ public final class Chat {
             if(!(conversation == null)){
               if (user.create(conversation.conversation.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
-                Interest intemp = new Interest(conversation.conversation.id, user.user.id, name, type);
-                System.out.println(intemp.title);
               } else {
                 //final Interest interest = new Interest(conversation.conversation.id, name, type);
                 //user.user.interests.add(interest);
@@ -343,8 +341,6 @@ public final class Chat {
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              System.out.println(u.id);
-              System.out.println(user.user.id);
               if (user.create(u.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
               } else {

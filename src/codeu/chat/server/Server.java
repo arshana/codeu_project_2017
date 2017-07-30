@@ -63,7 +63,7 @@ public final class Server {
 
   private final Model model = new Model();
   private final View view = new View(model);
-  private final Controller controller;
+  public final Controller controller;
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
@@ -197,7 +197,6 @@ public final class Server {
         final Uuid userid = Uuid.SERIALIZER.read(in);
         final String type = Serializers.STRING.read(in);
         final String title = Serializers.STRING.read(in);
-        LOG.info(userid + " from server");
         final Interest interest = controller.newInterest(id, userid, title, type);
         LOG.info(interest + "");
         
@@ -228,8 +227,6 @@ public final class Server {
 
         final Collection<Uuid> ids = Serializers.collection(Uuid.SERIALIZER).read(in);
         final Collection<Interest> interests = view.getInterests(ids);
-
-        LOG.info("server" + interests.size());
         Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
         Serializers.collection(Interest.SERIALIZER).write(out, interests);
       }

@@ -16,10 +16,17 @@
 package codeu.chat;
 
 import java.io.IOException;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
+import codeu.chat.client.commandline.Chat;
+import codeu.chat.client.core.ConversationContext;
+import codeu.chat.common.BasicController;
+import codeu.chat.common.Message;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
+import codeu.chat.server.Controller;
 import codeu.chat.server.NoOpRelay;
 import codeu.chat.server.RemoteRelay;
 import codeu.chat.server.Server;
@@ -96,6 +103,52 @@ final class ServerMain {
                         new RemoteRelay(relaySource);
 
     final Server server = new Server(id, secret, relay);
+
+    BufferedReader bw = null;
+    FileReader fw = null;
+
+    try {
+
+    	fw = new FileReader("log.txt");
+    	bw = new BufferedReader(fw);
+
+    	String line = bw.readLine();
+    	while(line != null){
+    		System.out.println("Line: " + line);
+    		String[] input = line.split(" ");
+    		if(input[0].equals("ADD-MESSAGE")){
+    			Uuid author = Uuid.parse(input[1]);
+    			Uuid conversation = Uuid.parse(input[2]);
+    			String body = input[3];
+    			//create message
+    			server.controller.newMessage(author, conversation, body);
+    		} else if(input[0].equals("ADD-INTEREST")){
+    			Uuid id1 = Uuid.parse(input[1]);
+    			Uuid id2 = Uuid.parse(input[2]);
+    			String type = input[3];
+    		    String title = input[3];
+    		    //create interest
+    		    server.controller.newInterest(id1, id2, type, title);
+    		} else if(input[0].equals("ADD-USER")){
+    			String name = input[1];
+    			System.out.println(name);
+    			//create user
+    			server.controller.newUser(name);
+    		} else if(input[0].equals("ADD-CONVERSATION")){
+    			String title = input[1];
+    			Uuid owner = Uuid.parse(input[2]);
+    			//create conversation
+    			server.controller.newConversation(title, owner);
+    		}
+    		line = bw.readLine();
+    	}
+    	bw.close();
+
+    } catch (IOException e) {
+
+    	e.printStackTrace();
+
+    }
 
     LOG.info("Created server.");
 
