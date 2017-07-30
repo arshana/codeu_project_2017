@@ -326,7 +326,7 @@ public final class Chat {
           if(type.equals("c")){
             final ConversationContext conversation = find(name);
             if(!(conversation == null)){
-              if (user.create(conversation.conversation.id, name, type) == null) {
+              if (user.create(conversation.conversation.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
               } else {
                 //final Interest interest = new Interest(conversation.conversation.id, name, type);
@@ -341,7 +341,7 @@ public final class Chat {
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              if (user.create(u.id, name, type) == null) {
+              if (user.create(u.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
               } else {
                 //final Interest interest = new Interest(u.id, name, type);
@@ -397,7 +397,7 @@ public final class Chat {
           if(type.equals("c")){
             final ConversationContext conversation = find(name);
             if(!(conversation == null)){
-              user.user.interests.remove(conversation.conversation.id);
+              user.remove(conversation.conversation.id, user.user.id, name, type);
               System.out.println("Conversation " + name + " removed");
             } //remove the UUID of conversation to the HashSet
             else{
@@ -407,7 +407,7 @@ public final class Chat {
           else if(type.equals("u")){
             final User u = findUser(name);
             if(!(u == null)){
-              user.user.interests.remove(u.id);
+              user.remove(u.id, user.user.id, name, type);
               System.out.println("User " + name + " removed");
             } //remove the UUID of the user to the HashSet
             else{

@@ -60,8 +60,12 @@ public final class UserContext {
     return all;
   }
 
-  public Interest create(Uuid id, String name, String type) {
-    return this.controller.newInterest(id, user.id, type, name);
+  public Interest create(Uuid id, Uuid userid, String name, String type) {
+    return this.controller.newInterest(id, userid, name, type);
+  }
+
+  public void remove(Uuid id, Uuid userid, String name, String type) {
+    this.controller.removeInterest(id, userid, name, type);
   }
 
   public Collection<Interest> interests(){

@@ -120,6 +120,17 @@ public final class Controller implements RawController, BasicController {
     }
     return interest;
   }
+
+  @Override
+  public void removeInterest(Uuid id, Uuid userid, String title, String type){
+    final User foundUser = model.userById().first(userid);
+    if (foundUser != null){
+      model.remove(new Interest(id, userid, title, type));
+      LOG.info("Interest removed: %s", id);
+    } else{
+      LOG.info("Interest removal failed");
+    }
+  }
   
   @Override
   public User newUser(Uuid id, String name, Time creationTime) {

@@ -59,4 +59,10 @@ public interface BasicController {
   //  representing the full state of the interest on the server.
   //  Whether interests can have the same title is undefined.
   Interest newInterest(Uuid id, Uuid userid, String title, String type);
+
+  // REMOVE INTEREST
+  //
+  //  Remove an interest on the server. All parameters must be provided
+  //  or else the serer won't apply the change.
+  void removeInterest(Uuid id, Uuid userid, String title, String type);
 }

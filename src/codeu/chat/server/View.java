@@ -123,7 +123,6 @@ public final class View implements BasicView, SinglesView {
         LOG.warning("Duplicate id %s", id);
       }
     }
-
     return found;
   }
 }

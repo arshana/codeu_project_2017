@@ -174,7 +174,6 @@ final class View implements BasicView {
       //Uuid.SERIALIZER.write(connection.out(), user);
       Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
 
-
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_INTEREST_RESPONSE) {
         interests.addAll(Serializers.collection(Interest.SERIALIZER).read(connection.in()));
       } else {
@@ -184,7 +183,6 @@ final class View implements BasicView {
       System.out.println("ERROR: Exception during call on server. Check log for details.");
       LOG.error(ex, "Exception during call on server.");
     }
-    LOG.info(interests.size() + "");
     return interests;
   }
 

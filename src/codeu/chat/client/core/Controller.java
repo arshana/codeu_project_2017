@@ -37,8 +37,7 @@ import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
 
-
-final class Controller implements BasicController{
+final class Controller implements BasicController {
 
   private final static Logger.Log LOG = Logger.newLog(Controller.class);
 
@@ -118,6 +117,51 @@ final class Controller implements BasicController{
 	  }
 
   @Override
+  public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
+
+      Interest response = null;
+
+      try (final Connection connection = source.connect()) {
+
+          Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
+	      Uuid.SERIALIZER.write(connection.out(), id);
+	      Uuid.SERIALIZER.write(connection.out(), userid);
+	      Serializers.STRING.write(connection.out(), title);
+	      Serializers.STRING.write(connection.out(), type);
+	      LOG.info(userid +" from core.controller");
+	      queue.add("ADD-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
+	      
+	      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_INTEREST_RESPONSE) {
+	        response = Serializers.nullable(Interest.SERIALIZER).read(connection.in());
+	      } else {
+	        LOG.error("Response from server failed.");
+	      }
+      } catch (Exception ex) {
+	      System.out.println("ERROR: Exception during call on server. Check log for details.");
+	      LOG.error(ex, "Exception during call on server.");
+      }
+      return response;
+  }
+
+  @Override
+  public void removeInterest(Uuid id, Uuid userid, String title, String type) {
+
+      try (final Connection connection = source.connect()) {
+
+          Serializers.INTEGER.write(connection.out(), NetworkCode.REMOVE_INTEREST_REQUEST);
+          Uuid.SERIALIZER.write(connection.out(), id);
+          Uuid.SERIALIZER.write(connection.out(), userid);
+          Serializers.STRING.write(connection.out(), type);
+          Serializers.STRING.write(connection.out(), title);
+          queue.add("REMOVE-INTEREST ID: " + id + " Type: " + type + " Title: " + title);
+
+      } catch (Exception ex) {
+          System.out.println("ERROR: Exception during call on server. Check log for details.");
+          LOG.error(ex, "Exception during call on server.");
+      }
+  }
+
+  @Override
   public User newUser(String name) {
 
     User response = null;
@@ -168,5 +212,53 @@ final class Controller implements BasicController{
     }
 
     return response;
+  }
+  
+  public Queue<String> getQueue(){
+	  return queue;
+  }
+  
+  public void printLog() throws InterruptedException{
+	  BufferedWriter bw = null;
+	  FileWriter fw = null;
+
+	  try {
+
+		  fw = new FileWriter("log.txt");
+		  bw = new BufferedWriter(fw);
+
+		  String newLine = queue.remove();
+		  while(newLine != null){
+			  bw.write(newLine + "\n");
+			  newLine = queue.remove();
+		  }
+
+	  } catch (IOException e) {
+		  e.printStackTrace();
+
+	  }
+  }
+  
+  //when do I call this method? How can I tell when the server is down?
+  public void readLog() throws InterruptedException{
+	  BufferedReader bw = null;
+	  FileReader fw = null;
+
+	  try {
+
+		  fw = new FileReader("log.txt");
+		  bw = new BufferedReader(fw);
+		  
+		  String line = bw.readLine();
+		  while(line != null){
+			  line = bw.readLine();
+			  queue.add(line);
+		  }
+
+	  } catch (IOException e) {
+
+		  e.printStackTrace();
+
+	  }
   }
 }

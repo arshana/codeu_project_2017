@@ -47,5 +47,16 @@ public class Interest {
 	    this.title = title;
 
 	}
+  
+	@Override
+	public boolean equals(Object obj){
+		if (obj instanceof Interest){
+			if (((Interest) obj).userid.equals(this.userid) &&
+					((Interest) obj).title.equals(this.title) &&
+					((Interest) obj).type.equals(this.type)){
+				return true;
+			}
+		}
+		return false;
+	}
 }
-	
