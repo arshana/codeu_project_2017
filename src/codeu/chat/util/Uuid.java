@@ -181,7 +181,7 @@ public final class Uuid {
 
   // Parse
   //
-  // Create a uuid from a sting.
+  // Create a uuid from a string.
   public static Uuid parse(String string) throws IOException {
     return parse(null, string.split("\\."), 0);
   }

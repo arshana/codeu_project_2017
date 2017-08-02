@@ -56,4 +56,10 @@ public interface BasicView {
   //
   //  Return ServerInfo
   ServerInfo getInfo();
+
+  // GET STATUS UPDATE
+  //
+  //  Return all interests belonging to user with given Uuid
+  Collection<Interest> getInterests(Collection<Uuid> ids);
+
 }
