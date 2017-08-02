@@ -104,7 +104,7 @@ final class ServerMain {
 
     final Server server = new Server(id, secret, relay);
 
-    BufferedReader bw = null;
+    /*BufferedReader bw = null;
     FileReader fw = null;
 
     try {
@@ -128,7 +128,7 @@ final class ServerMain {
     			String type = input[3];
     		    String title = input[3];
     		    //create interest
-    		    server.controller.newInterest(id1, id2, type, title);
+    		    //server.controller.newInterest(id1, id2, type, title);
     		} else if(input[0].equals("ADD-USER")){
     			String name = input[1];
     			System.out.println(name);
@@ -148,7 +148,7 @@ final class ServerMain {
 
     	e.printStackTrace();
 
-    }
+    }*/
 
     LOG.info("Created server.");
 

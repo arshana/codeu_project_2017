@@ -24,6 +24,7 @@ import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
@@ -51,8 +52,8 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public ConversationHeader newConversation(String title, Uuid owner) {
-    return newConversation(createId(), title, owner, Time.now());
+  public ConversationHeader newConversation(String title, Uuid owner, AccessControl access) {
+    return newConversation(createId(), title, owner, Time.now(), access);
   }
 
   @Override
@@ -161,19 +162,55 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
+  public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime, AccessControl access) {
 
     final User foundOwner = model.userById().first(owner);
 
     ConversationHeader conversation = null;
 
     if (foundOwner != null && isIdFree(id)) {
-      conversation = new ConversationHeader(id, owner, creationTime, title);
+      conversation = new ConversationHeader(id, owner, creationTime, title, access);
       model.add(conversation);
       LOG.info("Conversation added: " + id);
     }
 
     return conversation;
+  }
+
+  @Override
+  public void addMember(String user, Uuid conversation) {
+    final User u = model.userByText().first(user);
+    final ConversationHeader header = model.conversationById().first(conversation);
+
+    AccessControl potentialAccessor = header.getAccessControl(u);
+
+    if(potentialAccessor.hasMemberAccess()){
+      System.out.println("The user is already a member.");
+    }
+    else if(potentialAccessor.hasOwnerAccess()){
+      System.out.println("You cannot demote this user.");
+    }
+    else{
+      potentialAccessor.setMemberStatus();
+    }
+  }
+
+  @Override
+  public void addOwner(String user, Uuid conversation) {
+    final User u = model.userByText().first(user);
+    final ConversationHeader header = model.conversationById().first(conversation);
+
+    AccessControl potentialAccessor = header.getAccessControl(u);
+
+    if(potentialAccessor.hasOwnerAccess()){
+      System.out.println("The user already has owner status.");
+    }
+    else if(potentialAccessor.hasCreatorAccess()){
+      System.out.println("You cannot demote this user.");
+    }
+    else{
+      potentialAccessor.setOwnerStatus();
+    }
   }
 
   private Uuid createId() {
