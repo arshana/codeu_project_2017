@@ -14,11 +14,15 @@
 
 package codeu.chat.client.commandline;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -109,7 +113,7 @@ public final class Chat {
   // will be user selection focused.
   //
   private Panel createRootPanel(final Context context) {
-
+	 
     final Panel panel = new Panel();
 
     // HELP
@@ -180,7 +184,7 @@ public final class Chat {
     //
     panel.register("u-sign-in", new Panel.Command() {
       @Override
-      public void invoke(List<String> args) {
+      public void invoke(List<String> args){
         if(args.size() != 1){
           System.out.println("ERROR: Missing <username>");
         }
@@ -190,7 +194,7 @@ public final class Chat {
           if (user == null) {
             System.out.format("ERROR: Failed to sign in as '%s'\n", name);
           } else{
-            panels.push(createUserPanel(user));
+            panels.push(createUserPanel(user));         
           }
         }
       }
@@ -442,7 +446,7 @@ public final class Chat {
 
     // C-JOIN (join conversation)
     //
-    // Add a command that will joing a conversation when the user enters
+    // Add a command that will joining a conversation when the user enters
     // "c-join" while on the user panel.
     //
     panel.register("c-join", new Panel.Command() {

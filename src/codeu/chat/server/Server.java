@@ -62,7 +62,7 @@ public final class Server {
   private final Secret secret;
 
   private final Model model = new Model();
-  private final View view = new View(model);
+  public final View view = new View(model);
   public final Controller controller;
 
   private final Relay relay;
