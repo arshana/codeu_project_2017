@@ -70,6 +70,6 @@ public final class UserContext {
   }
 
   public Collection<Interest> interests(){
-    return view.getInterests(Arrays.asList(user.id));
+    return view.getInterests(user.id);
   }
 }

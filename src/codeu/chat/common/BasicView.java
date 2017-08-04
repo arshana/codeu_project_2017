@@ -59,7 +59,7 @@ public interface BasicView {
 
   // GET INTERESTS
   //
-  //  Returns all subscriptions for user id in ids
-  Collection<Interest> getInterests(Collection<Uuid> ids);
+  //  Return all interests belonging to user with given Uuid
+  Collection<Interest> getInterests(Uuid userid);
 
 }

@@ -158,16 +158,13 @@ final class View implements BasicView {
   }
 
   @Override
-  public Collection<Interest> getInterests(Collection<Uuid> ids){
+  public Collection<Interest> getInterests(Uuid userid){
     final Collection<Interest> interests = new ArrayList<Interest>();
 
     try (final Connection connection = source.connect()) {
 
       Serializers.INTEGER.write(connection.out(), NetworkCode.GET_INTEREST_REQUEST);
-      //Collection<Uuid> interest = (Collection<Uuid>)user.interests;
-      //Serializers.collection(Uuid.SERIALIZER).write(connection.out(), interest);
-      //Uuid.SERIALIZER.write(connection.out(), user);
-      Serializers.collection(Uuid.SERIALIZER).write(connection.out(), ids);
+      Uuid.SERIALIZER.write(connection.out(), userid);
 
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_INTEREST_RESPONSE) {
         interests.addAll(Serializers.collection(Interest.SERIALIZER).read(connection.in()));
