@@ -108,7 +108,7 @@ final class ServerMain {
 
     final Server server = new Server(id, secret, relay);
 
-    BufferedReader bw = null;
+    /*BufferedReader bw = null;
     FileReader fw = null;
 
     try {
@@ -190,7 +190,11 @@ final class ServerMain {
     				}
     			}
     		    //create interest
+//<<<<<<< all-interests
     		    server.controller.removeInterest(id1, user_id, title, type);
+//=======
+    		    //server.controller.newInterest(id1, id2, type, title);
+//>>>>>>> major-copy
     		} else if(input[0].equals("ADD-USER")){
     			String name = input[1];
     			//System.out.println(name);
@@ -222,7 +226,7 @@ final class ServerMain {
 
     	e.printStackTrace();
 
-    }
+    }*/
 
     LOG.info("Created server.");
 

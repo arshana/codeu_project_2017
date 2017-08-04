@@ -14,6 +14,7 @@
 
 package codeu.chat.common;
 
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Uuid;
 
 // BASIC CONTROLLER
@@ -49,7 +50,7 @@ public interface BasicController {
   //  operation is successful, a Conversation object will be returned
   //  representing the full state of the conversation on the server.
   //  Whether conversations can have the same title is undefined.
-  ConversationHeader newConversation(String title, Uuid owner);
+  ConversationHeader newConversation(String title, Uuid owner, AccessControl access);
 
   // NEW INTEREST
   //
@@ -65,4 +66,22 @@ public interface BasicController {
   //  Remove an interest on the server. All parameters must be provided
   //  or else the serer won't apply the change.
   void removeInterest(Uuid id, Uuid userid, String title, String type);
+
+  // ADD MEMBER
+  //
+  //  Add a user to an existing conversation. All parameters must be 
+  //  provided or else the server won't apply the change. If the operation
+  //  is successful, nothing will be returned, but the user may read all the 
+  //  messages in the conversation and may add new messages to it.
+  void addMember(String user, Uuid conversation);
+
+  // ADD OWNER
+  //
+  //  Make a user an owner of the conversation. All parameters must
+  //  be provided or else the server won't apply the change. As an owner, 
+  //  the user may change the member bit of any other user. The user may also 
+  //  read all messages in the conversation and add new messages to 
+  //  the conversation.
+  void addOwner(String user, Uuid conversation);
+
 }
