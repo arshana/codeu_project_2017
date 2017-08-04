@@ -612,8 +612,10 @@ public final class Chat {
                   System.out.println("ERROR: Could not find user.");
                }
             } 
-          }
-        }      
+          } else {
+              System.out.println("You cannot perform this action.");
+            }    
+        }   
       });
 
     // ADD-OWNER (add user)
@@ -637,6 +639,8 @@ public final class Chat {
                 System.out.println("ERROR: Could not find user.");
               }
             }
+         } else {
+            System.out.println("You cannot perform this action.");
          }
        }  
     });
