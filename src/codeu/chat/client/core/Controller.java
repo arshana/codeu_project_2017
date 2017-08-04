@@ -68,9 +68,9 @@ final class Controller implements BasicController {
   private String getConvoByUuid(Uuid conversation, Uuid owner){
 	  Context context = new Context(source);
       for(ConversationHeader convo : context.getConversations()){
-    	  System.out.print("Convo title in getUserByUuid method" + convo.title);
-    	  System.out.println("convo id: " + convo.id);
-    	  System.out.println("input convo id: " + conversation);
+    	  //System.out.print("Convo title in getUserByUuid method" + convo.title);
+    	  //System.out.println("convo id: " + convo.id);
+    	  //System.out.println("input convo id: " + conversation);
     	  if(convo.id.equals(conversation) && convo.owner.equals(owner)){
     		  return convo.title;
     	  }
@@ -186,9 +186,9 @@ final class Controller implements BasicController {
   private String getUserByUuid(Uuid owner){
 	  Context context = new Context(source);
       for(User user : context.getUsers()){
-    	  System.out.print("User name in getUserByUuid method" + user.name);
-    	  System.out.println("User id: " + user.id);
-    	  System.out.println("owner id: " + owner);
+    	  //System.out.print("User name in getUserByUuid method" + user.name);
+    	  //System.out.println("User id: " + user.id);
+    	  //System.out.println("owner id: " + owner);
     	  if(user.id.equals(owner)){
     		  return user.name;
     	  }

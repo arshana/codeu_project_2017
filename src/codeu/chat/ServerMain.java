@@ -128,14 +128,14 @@ final class ServerMain {
     				body += input[i] + " ";
     			}
    
-    			System.out.println("Body in server main: " + body);
+    			//System.out.println("Body in server main: " + body);
     			Uuid user_id = null;
     			Collection<User> list = server.view.getUsers();
     			for(User user : list){
-    				System.out.println("user name in server main: " + user.name);
-    				System.out.println("user id in server main loop: " + user.id);
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
     				if(user.name.equals(name)){
-    					System.out.println("Name equals:" + name);
+    					//System.out.println("Name equals:" + name);
     					user_id = user.id;
     					break;
     				}
@@ -143,10 +143,10 @@ final class ServerMain {
     			Uuid convo_id = null;
     			Collection<ConversationHeader> list2 = server.view.getConversations();
     			for(ConversationHeader convo : list2){
-    				System.out.println("convo name in server main: " + convo.title);
-    				System.out.println("conve id in server main loop: " + convo.id);
+    				//System.out.println("convo name in server main: " + convo.title);
+    				//System.out.println("conve id in server main loop: " + convo.id);
     				if(convo.title.equals(conversation) && convo.owner.equals(user_id)){
-    					System.out.println("title equals:" + name + "owner is: " + user_id);
+    					//System.out.println("title equals:" + name + "owner is: " + user_id);
     					convo_id = convo.id;
     					break;
     				}
@@ -162,10 +162,10 @@ final class ServerMain {
     		    Uuid user_id = null;
     			Collection<User> list = server.view.getUsers();
     			for(User user : list){
-    				System.out.println("user name in server main: " + user.name);
-    				System.out.println("user id in server main loop: " + user.id);
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
     				if(user.name.equals(name)){
-    					System.out.println("Name equals:" + name);
+    					//System.out.println("Name equals:" + name);
     					user_id = user.id;
     					break;
     				}
@@ -181,10 +181,10 @@ final class ServerMain {
     		    Uuid user_id = null;
     			Collection<User> list = server.view.getUsers();
     			for(User user : list){
-    				System.out.println("user name in server main: " + user.name);
-    				System.out.println("user id in server main loop: " + user.id);
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
     				if(user.name.equals(name)){
-    					System.out.println("Name equals:" + name);
+    					//System.out.println("Name equals:" + name);
     					user_id = user.id;
     					break;
     				}
@@ -193,7 +193,7 @@ final class ServerMain {
     		    server.controller.removeInterest(id1, user_id, title, type);
     		} else if(input[0].equals("ADD-USER")){
     			String name = input[1];
-    			System.out.println(name);
+    			//System.out.println(name);
     			//create user
     			server.controller.newUser(name);
     		} else if(input[0].equals("ADD-CONVERSATION")){
@@ -202,16 +202,16 @@ final class ServerMain {
     			Uuid user_id = null;
     			Collection<User> list = server.view.getUsers();
     			for(User user : list){
-    				System.out.println("user name in server main: " + user.name);
-    				System.out.println("user id in server main loop: " + user.id);
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
     				if(user.name.equals(name)){
-    					System.out.println("Name equals:" + name);
+    					//System.out.println("Name equals:" + name);
     					user_id = user.id;
     					break;
     				}
     			}
     			//create conversation
-    			System.out.println("user id in server main: " + user_id);
+    			//System.out.println("user id in server main: " + user_id);
     			server.controller.newConversation(title, user_id);
     		} 
     		line = bw.readLine();
