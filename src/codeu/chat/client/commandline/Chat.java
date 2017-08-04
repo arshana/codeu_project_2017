@@ -500,7 +500,6 @@ public final class Chat {
     panel.register("show-status-update", new Panel.Command() {
      @Override
      public void invoke(List<String> args){
-       System.out.println("chat" + user.user.id.toString());
        for (final Interest interest : user.interests()) {
          System.out.format(
                  "INTEREST %s %s (UUID:%s)\n",
@@ -508,14 +507,6 @@ public final class Chat {
                  interest.type,
                  interest.id);
        }
-       /*for (Interest interest : user.user.interests){
-         System.out.format(
-                 "INTEREST %s %s (UUID:%s)\n",
-                 interest.title,
-                 interest.type,
-                 interest.id);
-       }*/
-       //System.out.println(user.interests(user.user.id).size());
      }
     });
 
