@@ -14,12 +14,16 @@
 
 package codeu.chat.client.commandline;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -104,7 +108,7 @@ public final class Chat {
   // will be user selection focused.
   //
   private Panel createRootPanel(final Context context) {
-
+	 
     final Panel panel = new Panel();
 
     // HELP
@@ -171,7 +175,7 @@ public final class Chat {
     //
       panel.register("u-sign-in", new Panel.Command() {
       @Override
-      public void invoke(List<String> args) {
+      public void invoke(List<String> args){
         if(args.size() != 1){
           System.out.println("ERROR: Missing <username>");
         }
@@ -181,7 +185,7 @@ public final class Chat {
           if (user == null) {
             System.out.format("ERROR: Failed to sign in as '%s'\n", name);
           } else{
-            panels.push(createUserPanel(user));
+            panels.push(createUserPanel(user));         
           }
         }
       }
@@ -511,6 +515,71 @@ public final class Chat {
 
     });
 
+    // C-JOIN (join conversation)
+    //
+    // Add a command that will joining a conversation when the user enters
+    // "c-join" while on the user panel.
+    //
+    panel.register("c-join", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        if(args.size() != 1){
+          System.out.println("ERROR: Failed to join conversation");
+        }
+        else{
+          String name = args.get(0);
+          final ConversationContext conversation = find(name);
+          if (conversation == null) {
+            System.out.format("ERROR: No conversation with name '%s'\n", name);
+          } else {
+            panels.push(createConversationPanel(conversation));
+          }
+        } 
+      }
+
+      // Find the first conversation with the given name and return its context.
+      // If no conversation has the given name, this will return null.
+      private ConversationContext find(String title) {
+        for (final ConversationContext conversation : user.conversations()) {
+          if (title.equals(conversation.conversation.title)) {
+            return conversation;
+          }
+        }
+        return null;
+      }
+    });
+
+    // INFO
+    //
+    // Add a command that will print info about the current context when the
+    // user enters "info" while on the user panel.
+    //
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        System.out.println("User Info:");
+        System.out.format("  Name : %s\n", user.user.name);
+        System.out.format("  Id   : UUID:%s\n", user.user.id);
+      }
+    });
+
+    // SHOW-STATUS-UPDATE
+    //
+    // Add a command that will print users current interests when the user enters
+    // "show-status-update" while on the user panel.
+    //
+    panel.register("show-status-update", new Panel.Command() {
+     @Override
+     public void invoke(List<String> args){
+       for (final Interest interest : user.interests()) {
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
+       }
+     }
+    });
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.

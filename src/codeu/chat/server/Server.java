@@ -64,8 +64,9 @@ public final class Server {
   private final Secret secret;
 
   private final Model model = new Model();
-  private final View view = new View(model);
-  private final Controller controller;
+
+  public final View view = new View(model);
+  public final Controller controller;
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;

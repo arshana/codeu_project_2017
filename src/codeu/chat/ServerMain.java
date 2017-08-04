@@ -16,16 +16,20 @@
 package codeu.chat;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 import codeu.chat.client.commandline.Chat;
 import codeu.chat.client.core.ConversationContext;
+import codeu.chat.client.core.UserContext;
 import codeu.chat.common.BasicController;
+import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
+import codeu.chat.common.User;
 import codeu.chat.server.Controller;
 import codeu.chat.server.NoOpRelay;
 import codeu.chat.server.RemoteRelay;
@@ -117,29 +121,103 @@ final class ServerMain {
     		System.out.println("Line: " + line);
     		String[] input = line.split(" ");
     		if(input[0].equals("ADD-MESSAGE")){
-    			Uuid author = Uuid.parse(input[1]);
-    			Uuid conversation = Uuid.parse(input[2]);
-    			String body = input[3];
+    			String name = input[1];
+    			String conversation = input[2];
+    			String body = "";
+    			for(int i = 3; i < input.length; i++){
+    				body += input[i] + " ";
+    			}
+   
+    			//System.out.println("Body in server main: " + body);
+    			Uuid user_id = null;
+    			Collection<User> list = server.view.getUsers();
+    			for(User user : list){
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
+    				if(user.name.equals(name)){
+    					//System.out.println("Name equals:" + name);
+    					user_id = user.id;
+    					break;
+    				}
+    			}
+    			Uuid convo_id = null;
+    			Collection<ConversationHeader> list2 = server.view.getConversations();
+    			for(ConversationHeader convo : list2){
+    				//System.out.println("convo name in server main: " + convo.title);
+    				//System.out.println("conve id in server main loop: " + convo.id);
+    				if(convo.title.equals(conversation) && convo.owner.equals(user_id)){
+    					//System.out.println("title equals:" + name + "owner is: " + user_id);
+    					convo_id = convo.id;
+    					break;
+    				}
+    			}
     			//create message
-    			server.controller.newMessage(author, conversation, body);
+    			server.controller.newMessage(user_id, convo_id, body);
+    			
     		} else if(input[0].equals("ADD-INTEREST")){
     			Uuid id1 = Uuid.parse(input[1]);
-    			Uuid id2 = Uuid.parse(input[2]);
-    			String type = input[3];
-    		    String title = input[3];
+    			String name = input[2];
+    			String title = input[3];
+    		    String type = input[4];
+    		    Uuid user_id = null;
+    			Collection<User> list = server.view.getUsers();
+    			for(User user : list){
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
+    				if(user.name.equals(name)){
+    					//System.out.println("Name equals:" + name);
+    					user_id = user.id;
+    					break;
+    				}
+    			}
     		    //create interest
+    		    server.controller.newInterest(id1, user_id, title, type);
+    		    
+    		} else if(input[0].equals("REMOVE-INTEREST")){
+    			Uuid id1 = Uuid.parse(input[1]);
+    			String name = input[2];
+    			String title = input[3];
+    		    String type = input[4];
+    		    Uuid user_id = null;
+    			Collection<User> list = server.view.getUsers();
+    			for(User user : list){
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
+    				if(user.name.equals(name)){
+    					//System.out.println("Name equals:" + name);
+    					user_id = user.id;
+    					break;
+    				}
+    			}
+    		    //create interest
+//<<<<<<< all-interests
+    		    server.controller.removeInterest(id1, user_id, title, type);
+//=======
     		    //server.controller.newInterest(id1, id2, type, title);
+//>>>>>>> major-copy
     		} else if(input[0].equals("ADD-USER")){
     			String name = input[1];
-    			System.out.println(name);
+    			//System.out.println(name);
     			//create user
     			server.controller.newUser(name);
     		} else if(input[0].equals("ADD-CONVERSATION")){
     			String title = input[1];
-    			Uuid owner = Uuid.parse(input[2]);
+    			String name = input[2];
+    			Uuid user_id = null;
+    			Collection<User> list = server.view.getUsers();
+    			for(User user : list){
+    				//System.out.println("user name in server main: " + user.name);
+    				//System.out.println("user id in server main loop: " + user.id);
+    				if(user.name.equals(name)){
+    					//System.out.println("Name equals:" + name);
+    					user_id = user.id;
+    					break;
+    				}
+    			}
     			//create conversation
-    			server.controller.newConversation(title, owner);
-    		}
+    			//System.out.println("user id in server main: " + user_id);
+    			server.controller.newConversation(title, user_id);
+    		} 
     		line = bw.readLine();
     	}
     	bw.close();
@@ -167,4 +245,5 @@ final class ServerMain {
       }
     }
   }
+
 }

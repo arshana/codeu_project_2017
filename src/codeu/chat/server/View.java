@@ -80,7 +80,7 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public Collection<Interest> getInterests(Collection<Uuid> ids) {
-    return intersect(model.interestByUserId(), ids);
+    return all(model.interestByUserId());
   }
 
   @Override
