@@ -120,7 +120,6 @@ public final class View implements BasicView, SinglesView {
     for (final Uuid id : ids) {
 
       final T t = store.first(id);
-      LOG.info("" + id.toString());
 
       if (t == null) {
         LOG.warning("Unmapped id %s", id);
@@ -130,6 +129,7 @@ public final class View implements BasicView, SinglesView {
         LOG.warning("Duplicate id %s", id);
       }
     }
+
     return found;
   }
 }

@@ -17,11 +17,9 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
-import codeu.chat.util.Serializer;
-import codeu.chat.util.Serializers;
-import codeu.chat.util.Time;
-import codeu.chat.util.Uuid;
+import codeu.chat.util.*;
 
 public final class ConversationHeader {
 
@@ -34,6 +32,7 @@ public final class ConversationHeader {
       Uuid.SERIALIZER.write(out, value.owner);
       Time.SERIALIZER.write(out, value.creation);
       Serializers.STRING.write(out, value.title);
+      AccessControl.SERIALIZER.write(out, value.access);
 
     }
 
@@ -44,9 +43,10 @@ public final class ConversationHeader {
           Uuid.SERIALIZER.read(in),
           Uuid.SERIALIZER.read(in),
           Time.SERIALIZER.read(in),
-          Serializers.STRING.read(in)
-      );
-
+          Serializers.STRING.read(in),
+          AccessControl.SERIALIZER.read(in)
+      ); 
+    
     }
   };
 
@@ -54,13 +54,29 @@ public final class ConversationHeader {
   public final Uuid owner;
   public final Time creation;
   public final String title;
+  public final AccessControl access;
+  public final HashMap<Uuid, AccessControl> accessByUser;
 
-  public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
-
+  public ConversationHeader(Uuid id, Uuid owner, Time creation, String title, AccessControl access) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    this.access = access;
+    this.accessByUser = new HashMap<Uuid, AccessControl>();
+    AccessControl creatorAL = new AccessControl();
+    creatorAL.setCreatorStatus();
+    accessByUser.put(owner, creatorAL);
 
+  }
+
+  public AccessControl getAccessControl(User user){
+    AccessControl al = accessByUser.get(user.id);
+    if (al != null) { // access defined for given user
+      return al;
+    } else {
+      accessByUser.put(user.id, access);
+      return access; 
+    }
   }
 }

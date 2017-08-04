@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.lang.Thread;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
@@ -31,8 +32,11 @@ import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.User;
+
 import codeu.chat.server.Model;
 import codeu.chat.server.View;
+
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Uuid;
@@ -48,7 +52,12 @@ final class Controller implements BasicController {
   public Controller(ConnectionSource source) {
     this.source = source;
   }
+//<<<<<<< all-interests
   
+//=======
+
+  Queue<String> queue = new LinkedList<String>();
+//>>>>>>> major-copy
 
   static BufferedWriter bw = null;
   static FileWriter fw = null;
@@ -80,6 +89,7 @@ final class Controller implements BasicController {
   
   @Override
   public Message newMessage(Uuid author, Uuid conversation, String body) {
+
     Message response = null;
 
     try (final Connection connection = source.connect()) {
@@ -88,11 +98,12 @@ final class Controller implements BasicController {
       Uuid.SERIALIZER.write(connection.out(), author);
       Uuid.SERIALIZER.write(connection.out(), conversation);
       Serializers.STRING.write(connection.out(), body);
+
       String name = getUserByUuid(author);
       String title = getConvoByUuid(conversation, author);
       bw.write("ADD-MESSAGE " + name + " " + title + " " + body + "\n");
       bw.flush();
-      
+
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_MESSAGE_RESPONSE) {
         response = Serializers.nullable(Message.SERIALIZER).read(connection.in());
       } else {
@@ -106,7 +117,6 @@ final class Controller implements BasicController {
     return response;
   }
 
-
   @Override
   public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
 
@@ -114,7 +124,8 @@ final class Controller implements BasicController {
 
       try (final Connection connection = source.connect()) {
 
-          Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
+
+        Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
 	      Uuid.SERIALIZER.write(connection.out(), id);
 	      Uuid.SERIALIZER.write(connection.out(), userid);
 	      Serializers.STRING.write(connection.out(), title);
@@ -130,11 +141,12 @@ final class Controller implements BasicController {
 	        LOG.error("Response from server failed.");
 	      }
       } catch (Exception ex) {
-	      System.out.println("ERROR: Exception during call on server. Check log for details.");
-	      LOG.error(ex, "Exception during call on server.");
+        System.out.println("ERROR: Exception during call on server. Check log for details.");
+        LOG.error(ex, "Exception during call on server.");
       }
+
       return response;
-  }
+    }
 
   @Override
   public void removeInterest(Uuid id, Uuid userid, String title, String type) {
@@ -156,6 +168,7 @@ final class Controller implements BasicController {
       }
   }
 
+
   @Override
   public User newUser(String name) {
 
@@ -166,9 +179,7 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_REQUEST);
       Serializers.STRING.write(connection.out(), name);
       LOG.info("newUser: Request completed.");
-      bw.write("ADD-USER " + name + "\n");
-      bw.flush();
-      
+
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_RESPONSE) {
         response = Serializers.nullable(User.SERIALIZER).read(connection.in());
         LOG.info("newUser: Response completed.");
@@ -198,7 +209,7 @@ final class Controller implements BasicController {
 
   
   @Override
-  public ConversationHeader newConversation(String title, Uuid owner)  {
+  public ConversationHeader newConversation(String title, Uuid owner, AccessControl access) {
 
     ConversationHeader response = null;
 
@@ -207,12 +218,17 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVERSATION_REQUEST);
       Serializers.STRING.write(connection.out(), title);
       Uuid.SERIALIZER.write(connection.out(), owner);
+//<<<<<<< all-interests
       //User user = view.findUser(owner);
       String name = getUserByUuid(owner);
       
       bw.write("ADD-CONVERSATION " + title + " " + name + "\n");
       bw.flush();
       
+//=======
+      AccessControl.SERIALIZER.write(connection.out(), access);
+
+//>>>>>>> major-copy
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVERSATION_RESPONSE) {
         response = Serializers.nullable(ConversationHeader.SERIALIZER).read(connection.in());
       } else {
@@ -224,5 +240,92 @@ final class Controller implements BasicController {
     }
 
     return response;
+  }
+
+  @Override
+  public void addMember(String user, Uuid conversation) {
+    try (final Connection connection = source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.ADD_MEMBER_REQUEST);
+      Serializers.STRING.write(connection.out(), user);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+      LOG.info("addMember: Request completed.");
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.ADD_MEMBER_RESPONSE) {
+        LOG.info("addMember: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+  }
+
+  @Override
+  public void addOwner(String user, Uuid conversation) {
+    try (final Connection connection = source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.ADD_OWNER_REQUEST);
+      Serializers.STRING.write(connection.out(), user);
+      Uuid.SERIALIZER.write(connection.out(), conversation);
+      LOG.info("addOwner: Request completed.");
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.ADD_OWNER_RESPOND) {
+        LOG.info("addOwner: Response completed.");
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+  }
+
+
+  public Queue<String> getQueue(){
+    return queue;
+  }
+  
+  public void printLog() throws InterruptedException{
+    BufferedWriter bw = null;
+    FileWriter fw = null;
+
+    try {
+
+      fw = new FileWriter("log.txt");
+      bw = new BufferedWriter(fw);
+
+      String newLine = queue.remove();
+      while(newLine != null){
+        bw.write(newLine + "\n");
+        newLine = queue.remove();
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+
+    }
+  }
+  
+  //when do I call this method? How can I tell when the server is down?
+  public void readLog() throws InterruptedException{
+    BufferedReader bw = null;
+    FileReader fw = null;
+
+    try {
+
+      fw = new FileReader("log.txt");
+      bw = new BufferedReader(fw);
+      
+      String line = bw.readLine();
+      while(line != null){
+        line = bw.readLine();
+        queue.add(line);
+      }
+
+    } catch (IOException e) {
+
+      e.printStackTrace();
+
+    }
   }
 }

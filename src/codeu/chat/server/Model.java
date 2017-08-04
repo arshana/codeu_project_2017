@@ -67,7 +67,7 @@ public final class Model {
   private final Store<Uuid, Message> messageById = new Store<>(UUID_COMPARE);
   private final Store<Time, Message> messageByTime = new Store<>(TIME_COMPARE);
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
-  
+
   private final Store<Uuid, Interest> interestById = new Store<>(UUID_COMPARE);
   private final Store<Uuid, Interest> interestByUserId = new Store<>(UUID_COMPARE);
   private final Store<String, Interest> interestByType = new Store<>(STRING_COMPARE);
@@ -96,6 +96,7 @@ public final class Model {
     conversationByTime.insert(conversation.creation, conversation);
     conversationByText.insert(conversation.title, conversation);
     conversationPayloadById.insert(conversation.id, new ConversationPayload(conversation.id));
+
   }
 
   public StoreAccessor<Uuid, ConversationHeader> conversationById() {
@@ -131,7 +132,7 @@ public final class Model {
   public StoreAccessor<String, Message> messageByText() {
     return messageByText;
   }
-  
+
   public void add(Interest interest) {
     interestById.insert(interest.id, interest);
     interestByUserId.insert(interest.userid, interest);

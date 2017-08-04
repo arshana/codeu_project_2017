@@ -27,9 +27,8 @@ import codeu.chat.util.connections.ConnectionSource;
 
 public final class Context {
 
-  private final BasicView view;
+  private final View view;
   private final Controller controller;
-  //private final static Logger.Log LOG = Logger.newLog(Context.class);
 
   public Context(ConnectionSource source) {
     this.view = new View(source);
@@ -61,7 +60,6 @@ public final class Context {
 	  return conversations;
   }
 
-  //Added this method to get the info from the server
   public ServerInfo getInfo() {
     return view.getInfo();
   }

@@ -51,13 +51,13 @@ public interface BasicView {
   //
   //   Return all messages whose id is found in the given collection.
   Collection<Message> getMessages(Collection<Uuid> ids);
-  
+
   // GET SERVER INFO
   //
   //  Return ServerInfo
   ServerInfo getInfo();
 
-  // GET STATUS UPDATE
+  // GET INTERESTS
   //
   //  Return all interests belonging to user with given Uuid
   Collection<Interest> getInterests(Uuid userid);

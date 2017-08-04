@@ -23,6 +23,7 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Interest;
 import codeu.chat.common.User;
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Uuid;
 
 public final class UserContext {
@@ -37,8 +38,8 @@ public final class UserContext {
     this.controller = controller;
   }
 
-  public ConversationContext start(String name) {
-    final ConversationHeader conversation = controller.newConversation(name, user.id);
+  public ConversationContext start(String name, AccessControl access) {
+    final ConversationHeader conversation = controller.newConversation(name, user.id,access);
     return conversation == null ?
         null :
         new ConversationContext(user, conversation, view, controller);

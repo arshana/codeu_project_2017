@@ -14,6 +14,7 @@
 
 package codeu.chat.common;
 
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
@@ -38,8 +39,7 @@ public interface RawController {
 
   // NEW CONVERSATION
   //
-  // Add a new conversation to the model with a specific id. If the id is
+  // Add a new conversation to the model with a specific if. If the id is
   // already in use, the call will fail and null will be returned.
-  ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime);
-
+  ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime, AccessControl access); 
 }

@@ -17,12 +17,13 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.util.Collection;
 import java.util.HashSet;
-
 import java.util.Set;
 
 import codeu.chat.common.Interest;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;

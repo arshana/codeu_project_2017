@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,13 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+
 import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
-import codeu.chat.util.Tokenizer;
-import codeu.chat.util.Uuid;
 
+import codeu.chat.util.AccessControl;
+import codeu.chat.util.Tokenizer;
 
 public final class Chat {
 
@@ -50,7 +52,6 @@ public final class Chat {
 
   public Chat(Context context) {
     this.panels.push(createRootPanel(context));
-
   }
 
   // HANDLE COMMAND
@@ -59,19 +60,13 @@ public final class Chat {
   // is willing to take another command, the function will return true. If
   // the system wants to exit, the function will return false.
   //
-  public boolean handleCommand(String line) {
+  public boolean handleCommand(String line) throws IOException {
 
     final List<String> args = new ArrayList<>();
     final Tokenizer tokenizer = new Tokenizer(line);
-    
-    try{
-      for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
-        args.add(token);
-      }
-    } catch(IOException e){
-      System.out.println(e);
+    for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
+      args.add(token);
     }
-    
     final String command = args.get(0);
     args.remove(0);
 
@@ -131,10 +126,6 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
-        //Next two lines added during Version Check technical activity.
-        System.out.println("  info");
-        System.out.println("    Get version and server up time.");
-        //
         System.out.println("  exit");
         System.out.println("    Exit the program.");
       }
@@ -182,7 +173,7 @@ public final class Chat {
     // Add a command to sign-in as a user when the user enters "u-sign-in"
     // while on the root panel.
     //
-    panel.register("u-sign-in", new Panel.Command() {
+      panel.register("u-sign-in", new Panel.Command() {
       @Override
       public void invoke(List<String> args){
         if(args.size() != 1){
@@ -210,27 +201,19 @@ public final class Chat {
         return null;
       }
     });
-    
-    // INFO (return version)
-    //
-    // Add a command to respond to the user's request of info. Return version and 
-    // server up time.
-    //
-    panel.register("info", new Panel.Command(){
-        @Override
-        public void invoke(List<String> args){
-            final ServerInfo info = context.getInfo();
-            if (info == null){
-                //Communicate error to user - the server did not send us a valid info object.
-                System.out.println("ERROR: Server sent invalid info object");
-            }
-            else {
-                //Print the server info to the user in a pretty way.
-                System.out.println("VERSION: " + info.version);
-                System.out.println("SERVER UP TIME: " + info.startTime);
-            }
+
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        final ServerInfo info = context.getInfo();
+        if (info == null) {
+          System.out.println("ERROR: Failed to access server info");
+        } else {
+          System.out.format("Version: UUID:%s\nUptime: %s\n", info.version, info.startTime);
         }
+      } 
     });
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
@@ -270,7 +253,6 @@ public final class Chat {
         System.out.println("    Exit the program.");
       }
     });
-
     // C-LIST (list conversations)
     //
     // Add a command that will print all conversations when the user enters
@@ -297,21 +279,110 @@ public final class Chat {
       @Override
       public void invoke(List<String> args) {
         if(args.size() != 1){
-          System.out.println("ERROR: Failed to title new conversation");
+          System.out.println("ERROR: Missing <title>");
         }
-        else{
+        else {
           String name = args.get(0);
-          final ConversationContext conversation = user.start(name);
+        if (name.length() > 0) {
+          AccessControl access = null;
+          while (access == null) {
+            Scanner reader = new Scanner(System.in);
+            System.out.println("Type 'owner', 'member' or 'none' to determine access");
+            String input = reader.next();
+            if (input.equals("owner")) {
+              access = new AccessControl();
+              access.setOwnerStatus();
+            } else if (input.equals("member")) {
+              access = new AccessControl();
+              access.setMemberStatus();
+            } else if (input.equals("none")) {
+              access = new AccessControl();
+              access.setStatus((byte)0b00000000);
+            }
+          }
+
+          final ConversationContext conversation = user.start(name, access);
           if (conversation == null) {
             System.out.println("ERROR: Failed to create new conversation");
-          } else{
-            panels.push(createConversationPanel(conversation));
+          } else {
+              panels.push(createConversationPanel(conversation));
+            }
           }
         }
       }
     });
 
-    // C-ADD-INTEREST (add interest)
+    // C-JOIN (join conversation)
+    //
+    // Add a command that will joing a conversation when the user enters
+    // "c-join" while on the user panel.
+    //
+     panel.register("c-join", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        if(args.size() != 1){
+          System.out.println("ERROR: Failed to join conversation");
+        }
+        else{
+          String name = args.get(0);
+          final ConversationContext conversation = find(name);
+          if (conversation == null) {
+            System.out.format("ERROR: No conversation with name '%s'\n", name);
+          } else {
+            panels.push(createConversationPanel(conversation));
+          }
+        } 
+      }
+
+      // Find the first conversation with the given name and return its context.
+      // If no conversation has the given name, this will return null.
+      private ConversationContext find(String title) {
+        for (final ConversationContext conversation : user.conversations()) {
+          if (title.equals(conversation.conversation.title)) {
+            return conversation;
+          }
+        }
+        return null;
+      }
+    });
+
+    panel.register("show-status-update", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args){
+       System.out.println("chat" + user.user.id.toString());
+       for (final Interest interest : user.interests()) {
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
+       }
+       /*for (Interest interest : user.user.interests){
+         System.out.format(
+                 "INTEREST %s %s (UUID:%s)\n",
+                 interest.title,
+                 interest.type,
+                 interest.id);
+       }*/
+       //System.out.println(user.interests(user.user.id).size());
+     }
+    });
+
+    // INFO
+    //
+    // Add a command that will print info about the current context when the
+    // user enters "info" while on the user panel.
+    //
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        System.out.println("User Info:");
+        System.out.format("  Name : %s\n", user.user.name);
+        System.out.format("  Id   : UUID:%s\n", user.user.id);
+      }
+    });
+
+     // C-ADD-INTEREST (add interest)
     //
     // Add a command that will add a conversation or user that the user wants to follow
     // when the user enters "c-add-interest" while on the user panel. Has two arguments,
@@ -510,7 +581,6 @@ public final class Chat {
      }
     });
 
-
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
     return panel;
@@ -533,6 +603,10 @@ public final class Chat {
         System.out.println("    List all messages in the current conversation.");
         System.out.println("  m-add <message>");
         System.out.println("    Add a new message to the current conversation as the current user.");
+        System.out.println("  add-member <user>");
+        System.out.println("    Add a member to the current conversation.");
+        System.out.println("  add-owner <user>");
+        System.out.println("    Add a owner to the current conversation.");
         System.out.println("  info");
         System.out.println("    Display all info about the current conversation.");
         System.out.println("  back");
@@ -573,14 +647,71 @@ public final class Chat {
     panel.register("m-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        if(args.size() != 1){
-          System.out.println("ERROR: Failed to add new message");
+        if(!(args.size() > 0)){
+          System.out.println("ERROR: Failed to add message");
         }
-        else{
+        else {
           String message = args.get(0);
+          if (message.length() > 0) {
           conversation.add(message);
+          } else {
+            System.out.println("ERROR: Messages must contain text");
+          }
         }
-      }
+       }
+    });
+
+    // ADD-MEMBER (add user)
+    //
+    // Add a command to add a new member to the current conversation when the
+    // user enters "add-member" while on the conversation panel.
+    //
+    panel.register("add-member", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        // check if user using the command is able to add members
+        if(conversation.conversation.getAccessControl(conversation.user).hasOwnerAccess()){
+          if(args.size() != 1){
+            System.out.println("ERROR: Missing <user>");
+          } else {
+            String user = args.get(0);
+              if (user.length() > 0) {
+                conversation.addMember(user, conversation.conversation.id);
+              } else {
+                  System.out.println("ERROR: Could not find user.");
+               }
+            } 
+          } else {
+              System.out.println("You cannot perform this action.");
+            }    
+        }   
+      });
+
+    // ADD-OWNER (add user)
+    //
+    // Add a command to add a new owner to the current conversation when the
+    // user enters "add-owner" while on the conversation panel.
+    //
+    panel.register("add-owner", new Panel.Command() {
+      @Override
+      public void invoke(List<String> args) {
+        // check if user using the command is able to 
+        if(conversation.conversation.getAccessControl(conversation.user).hasCreatorAccess()){
+          if(args.size() != 1){
+            System.out.println("ERROR: Missing <user>");
+          }
+          else {
+          	String user = args.get(0);
+            if (user.length() > 0) {
+              conversation.addOwner(user, conversation.conversation.id);
+            } else {
+                System.out.println("ERROR: Could not find user.");
+              }
+            }
+         } else {
+            System.out.println("You cannot perform this action.");
+         }
+       }  
     });
 
     // INFO
