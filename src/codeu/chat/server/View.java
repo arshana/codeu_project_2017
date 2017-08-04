@@ -82,15 +82,11 @@ public final class View implements BasicView, SinglesView {
   public Collection<Interest> getInterests(Uuid userid) {
     Collection<Interest> interests = all(model.interestById());
     ArrayList<Interest> retInterests = new ArrayList<Interest>();
-    LOG.info("userid" + userid);
     for(Interest interest : interests) {
-      LOG.info("intuserid" + interest.userid);
       if (interest.userid.equals(userid)){
         retInterests.add(interest);
       }
     }
-    LOG.info("interests" + interests.size());
-    LOG.info("retinterests" + retInterests.size());
     return retInterests;
   }
 
