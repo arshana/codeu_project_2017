@@ -157,9 +157,9 @@ final class ServerMain {
         } else if(input[0].equals("ADD-INTEREST")){
           Uuid id1 = Uuid.parse(input[1]);
           String name = input[2];
-          String title = input[3];
-            String type = input[4];
-            Uuid user_id = null;
+          String title = input[2];
+          String type = input[3];
+          Uuid user_id = null;
           Collection<User> list = server.view.getUsers();
           for(User user : list){
             //System.out.println("user name in server main: " + user.name);
@@ -177,8 +177,8 @@ final class ServerMain {
           Uuid id1 = Uuid.parse(input[1]);
           String name = input[2];
           String title = input[3];
-            String type = input[4];
-            Uuid user_id = null;
+          String type = input[4];
+          Uuid user_id = null;
           Collection<User> list = server.view.getUsers();
           for(User user : list){
             //System.out.println("user name in server main: " + user.name);
@@ -189,7 +189,7 @@ final class ServerMain {
               break;
             }
           }
-            //create interest
+            //remove interest
             server.controller.removeInterest(id1, user_id, title, type);
         } else if(input[0].equals("ADD-USER")){
           String name = input[1];

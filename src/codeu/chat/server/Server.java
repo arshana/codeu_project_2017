@@ -205,8 +205,8 @@ public final class Server {
 
         final Uuid id = Uuid.SERIALIZER.read(in);
         final Uuid userid = Uuid.SERIALIZER.read(in);
-        final String type = Serializers.STRING.read(in);
         final String title = Serializers.STRING.read(in);
+        final String type = Serializers.STRING.read(in);
         final Interest interest = controller.newInterest(id, userid, title, type);
         LOG.info(interest + "");
         

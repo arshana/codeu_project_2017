@@ -116,10 +116,11 @@ final class Controller implements BasicController {
 
         Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_INTEREST_REQUEST);
         Uuid.SERIALIZER.write(connection.out(), id);
-        Uuid.SERIALIZER.write(connection.out(), id);
-        Serializers.STRING.write(connection.out(), type);
+        Uuid.SERIALIZER.write(connection.out(), userid);
         Serializers.STRING.write(connection.out(), title);
-        bw.write("ADD-INTEREST " + id + " " + type + " " + title + "\n");
+        Serializers.STRING.write(connection.out(), type);
+        String name = getUserByUuid(userid);
+        bw.write("ADD-INTEREST " + id + " " + name + " " + type + " " + title + "\n");
         bw.flush();
         
         if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_INTEREST_RESPONSE) {
