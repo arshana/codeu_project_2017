@@ -157,8 +157,8 @@ final class ServerMain {
         } else if(input[0].equals("ADD-INTEREST")){
           Uuid id1 = Uuid.parse(input[1]);
           String name = input[2];
-          String title = input[2];
-          String type = input[3];
+          String title = input[3];
+          String type = input[4];
           Uuid user_id = null;
           Collection<User> list = server.view.getUsers();
           for(User user : list){
