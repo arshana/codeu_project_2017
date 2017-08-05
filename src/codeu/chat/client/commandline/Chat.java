@@ -235,8 +235,8 @@ public final class Chat {
         System.out.println("USER MODE");
         System.out.println("  c-list");
         System.out.println("    List all conversations that the current user can interact with.");
-        System.out.println("  c-add <title>");
-        System.out.println("    Add a new conversation with the given title and join it as the current user.");
+        System.out.println("  c-add <title> <default-access>");
+        System.out.println("    Add a new conversation with the given title and join it as the current user. Set the default access for all new members.");
         System.out.println("  c-add-interest <type> <title>");
         System.out.println("    Add an interest for a user with the type ('c' or 'u') and its title.");
         System.out.println("  c-join <title>");
@@ -278,35 +278,34 @@ public final class Chat {
     panel.register("c-add", new Panel.Command() {
       @Override
       public void invoke(List<String> args) {
-        if(args.size() != 1){
-          System.out.println("ERROR: Missing <title>");
+        if(args.size() != 2){
+          System.out.println("ERROR: Missing <title> <default-access>");
         }
         else {
           String name = args.get(0);
-        if (name.length() > 0) {
-          AccessControl access = null;
-          while (access == null) {
-            Scanner reader = new Scanner(System.in);
-            System.out.println("Type 'owner', 'member' or 'none' to determine access");
-            String input = reader.next();
-            if (input.equals("owner")) {
+          String type = args.get(1);
+          if (type.equals("owner") || type.equals("member") || type.equals("none")) {
+            AccessControl access = null;
+            if (type.equals("owner")) {
               access = new AccessControl();
               access.setOwnerStatus();
-            } else if (input.equals("member")) {
+            } else if (type.equals("member")) {
               access = new AccessControl();
               access.setMemberStatus();
-            } else if (input.equals("none")) {
+            } else if (type.equals("none")) {
               access = new AccessControl();
-              access.setStatus((byte)0b00000000);
+              access.setStatus((byte) 0b00000000);
             }
-          }
 
-          final ConversationContext conversation = user.start(name, access);
-          if (conversation == null) {
-            System.out.println("ERROR: Failed to create new conversation");
-          } else {
+            final ConversationContext conversation = user.start(name, access);
+            if (conversation == null) {
+              System.out.println("ERROR: Failed to create new conversation");
+            } else {
               panels.push(createConversationPanel(conversation));
             }
+          }
+          else {
+            System.out.println("ERROR: Invalid default-access.");
           }
         }
       }
@@ -357,14 +356,6 @@ public final class Chat {
                  interest.type,
                  interest.id);
        }
-       /*for (Interest interest : user.user.interests){
-         System.out.format(
-                 "INTEREST %s %s (UUID:%s)\n",
-                 interest.title,
-                 interest.type,
-                 interest.id);
-       }*/
-       //System.out.println(user.interests(user.user.id).size());
      }
     });
 
@@ -404,8 +395,6 @@ public final class Chat {
               if (user.create(conversation.conversation.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
               } else {
-                //final Interest interest = new Interest(conversation.conversation.id, name, type);
-                //user.user.interests.add(interest);
                 System.out.println("Conversation " + name + " added");
               }
             }  
@@ -419,8 +408,6 @@ public final class Chat {
               if (user.create(u.id, user.user.id, name, type) == null) {
                 System.out.println("ERROR: Failed to create new interest");
               } else {
-                //final Interest interest = new Interest(u.id, name, type);
-                //user.user.interests.add(interest);
                 System.out.println("User " + name + " added");
               }
             } //add the UUID of the user to the HashSet
@@ -683,7 +670,7 @@ public final class Chat {
             } 
           } else {
               System.out.println("You cannot perform this action.");
-            }    
+          }
         }   
       });
 
