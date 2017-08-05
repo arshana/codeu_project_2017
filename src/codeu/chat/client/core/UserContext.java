@@ -14,13 +14,16 @@
 
 package codeu.chat.client.core;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.Interest;
 import codeu.chat.common.User;
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Uuid;
 
 public final class UserContext {
@@ -35,11 +38,15 @@ public final class UserContext {
     this.controller = controller;
   }
 
-  public ConversationContext start(String name) {
-    final ConversationHeader conversation = controller.newConversation(name, user.id);
+  public ConversationContext start(String name, AccessControl access) {
+    final ConversationHeader conversation = controller.newConversation(name, user.id,access);
     return conversation == null ?
         null :
         new ConversationContext(user, conversation, view, controller);
+  }
+
+  public Collection<User> users() {
+    return view.getUsers();
   }
 
   public Iterable<ConversationContext> conversations() {
@@ -52,5 +59,17 @@ public final class UserContext {
     }
 
     return all;
+  }
+
+  public Interest create(Uuid id, Uuid userid, String name, String type) {
+    return this.controller.newInterest(id, userid, name, type);
+  }
+
+  public void remove(Uuid id, Uuid userid, String name, String type) {
+    this.controller.removeInterest(id, userid, name, type);
+  }
+
+  public Collection<Interest> interests(){
+    return view.getInterests(user.id);
   }
 }

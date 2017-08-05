@@ -19,10 +19,12 @@ import java.util.Collection;
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.util.AccessControl;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
@@ -50,8 +52,8 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public ConversationHeader newConversation(String title, Uuid owner) {
-    return newConversation(createId(), title, owner, Time.now());
+  public ConversationHeader newConversation(String title, Uuid owner, AccessControl access) {
+    return newConversation(createId(), title, owner, Time.now(), access);
   }
 
   @Override
@@ -100,6 +102,38 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
+  public Interest newInterest(Uuid id, Uuid userid, String title, String type) {
+
+    final User foundUser = model.userById().first(userid);
+
+    Interest interest = null;
+
+    //if (foundUser != null && isIdFree(id)) {
+    if (foundUser != null) {
+
+      interest = new Interest(id, userid, title, type);
+      model.add(interest);
+      LOG.info("Interest added: %s", interest.id);
+
+    } else {
+
+      LOG.info("Interest additon failed");
+    }
+    return interest;
+  }
+
+  @Override
+  public void removeInterest(Uuid id, Uuid userid, String title, String type){
+    final User foundUser = model.userById().first(userid);
+    if (foundUser != null){
+      model.remove(new Interest(id, userid, title, type));
+      LOG.info("Interest removed: %s", id);
+    } else{
+      LOG.info("Interest removal failed");
+    }
+  }
+  
+  @Override
   public User newUser(Uuid id, String name, Time creationTime) {
 
     User user = null;
@@ -128,19 +162,55 @@ public final class Controller implements RawController, BasicController {
   }
 
   @Override
-  public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
+  public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime, AccessControl access) {
 
     final User foundOwner = model.userById().first(owner);
 
     ConversationHeader conversation = null;
 
     if (foundOwner != null && isIdFree(id)) {
-      conversation = new ConversationHeader(id, owner, creationTime, title);
+      conversation = new ConversationHeader(id, owner, creationTime, title, access);
       model.add(conversation);
       LOG.info("Conversation added: " + id);
     }
 
     return conversation;
+  }
+
+  @Override
+  public void addMember(String user, Uuid conversation) {
+    final User u = model.userByText().first(user);
+    final ConversationHeader header = model.conversationById().first(conversation);
+
+    AccessControl potentialAccessor = header.getAccessControl(u);
+
+    if(potentialAccessor.hasMemberAccess()){
+      System.out.println("The user is already a member.");
+    }
+    else if(potentialAccessor.hasOwnerAccess()){
+      System.out.println("You cannot demote this user.");
+    }
+    else{
+      potentialAccessor.setMemberStatus();
+    }
+  }
+
+  @Override
+  public void addOwner(String user, Uuid conversation) {
+    final User u = model.userByText().first(user);
+    final ConversationHeader header = model.conversationById().first(conversation);
+
+    AccessControl potentialAccessor = header.getAccessControl(u);
+
+    if(potentialAccessor.hasOwnerAccess()){
+      System.out.println("The user already has owner status.");
+    }
+    else if(potentialAccessor.hasCreatorAccess()){
+      System.out.println("You cannot demote this user.");
+    }
+    else{
+      potentialAccessor.setOwnerStatus();
+    }
   }
 
   private Uuid createId() {

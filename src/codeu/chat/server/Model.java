@@ -18,6 +18,7 @@ import java.util.Comparator;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Interest;
 import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
@@ -67,6 +68,11 @@ public final class Model {
   private final Store<Time, Message> messageByTime = new Store<>(TIME_COMPARE);
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
 
+  private final Store<Uuid, Interest> interestById = new Store<>(UUID_COMPARE);
+  private final Store<Uuid, Interest> interestByUserId = new Store<>(UUID_COMPARE);
+  private final Store<String, Interest> interestByType = new Store<>(STRING_COMPARE);
+  private final Store<String, Interest> interestByTitle = new Store<>(STRING_COMPARE);
+
   public void add(User user) {
     userById.insert(user.id, user);
     userByTime.insert(user.creation, user);
@@ -90,6 +96,7 @@ public final class Model {
     conversationByTime.insert(conversation.creation, conversation);
     conversationByText.insert(conversation.title, conversation);
     conversationPayloadById.insert(conversation.id, new ConversationPayload(conversation.id));
+
   }
 
   public StoreAccessor<Uuid, ConversationHeader> conversationById() {
@@ -124,5 +131,35 @@ public final class Model {
 
   public StoreAccessor<String, Message> messageByText() {
     return messageByText;
+  }
+
+  public void add(Interest interest) {
+    interestById.insert(interest.id, interest);
+    interestByUserId.insert(interest.userid, interest);
+    interestByType.insert(interest.type, interest);
+    interestByTitle.insert(interest.title, interest);
+  }
+
+  public void remove(Interest interest) {
+    interestById.removeInterest(interest.id, interest);
+    interestByUserId.removeInterest(interest.userid, interest);
+    interestByType.removeInterest(interest.type, interest);
+    interestByTitle.removeInterest(interest.title, interest);
+  }
+
+  public StoreAccessor<Uuid, Interest> interestById() {
+    return interestById;
+  }
+
+  public StoreAccessor<Uuid, Interest> interestByUserId() {
+    return interestByUserId;
+  }
+
+  public StoreAccessor<String, Interest> interestByType() {
+    return interestByType;
+  }
+
+  public StoreAccessor<String, Interest> interestByTitle() {
+    return interestByTitle;
   }
 }
