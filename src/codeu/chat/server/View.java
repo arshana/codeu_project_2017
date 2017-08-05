@@ -79,10 +79,17 @@ public final class View implements BasicView, SinglesView {
   }
 
   @Override
-  public Collection<Interest> getInterests(Collection<Uuid> ids) {
-    return intersect(model.interestByUserId(), ids);
+  public Collection<Interest> getInterests(Uuid userid) {
+    Collection<Interest> interests = all(model.interestById());
+    ArrayList<Interest> retInterests = new ArrayList<Interest>();
+    for(Interest interest : interests) {
+      if (interest.userid.equals(userid)){
+        retInterests.add(interest);
+      }
+    }
+    return retInterests;
   }
-
+  
   @Override
   public User findUser(Uuid id) { return model.userById().first(id); }
 

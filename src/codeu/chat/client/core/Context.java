@@ -19,15 +19,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import codeu.chat.common.BasicView;
-import codeu.chat.common.User;
+import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
 
 public final class Context {
 
-  private final View view;
+  private final BasicView view;
   private final Controller controller;
+  //private final static Logger.Log LOG = Logger.newLog(Context.class);
 
   public Context(ConnectionSource source) {
     this.view = new View(source);
@@ -48,7 +50,18 @@ public final class Context {
     }
     return users;
   }
+  
+  public Iterable<User> getUsers() {
+      final Collection<User> users = view.getUsers();
+      return users;
+  }
+  
+  public Iterable<ConversationHeader> getConversations(){
+    final Collection<ConversationHeader> conversations = view.getConversations();
+    return conversations;
+  }
 
+  //Added this method to get the info from the server
   public ServerInfo getInfo() {
     return view.getInfo();
   }

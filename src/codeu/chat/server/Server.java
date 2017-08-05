@@ -64,8 +64,8 @@ public final class Server {
   private final Secret secret;
 
   private final Model model = new Model();
-  private final View view = new View(model);
-  private final Controller controller;
+  public final View view = new View(model);
+  public final Controller controller;
 
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
@@ -235,12 +235,13 @@ public final class Server {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
 
-        final Collection<Uuid> ids = Serializers.collection(Uuid.SERIALIZER).read(in);
-        final Collection<Interest> interests = view.getInterests(ids);
+        final Uuid userid = Uuid.SERIALIZER.read(in);
+        final Collection<Interest> interests = view.getInterests(userid);
         Serializers.INTEGER.write(out, NetworkCode.GET_INTEREST_RESPONSE);
         Serializers.collection(Interest.SERIALIZER).write(out, interests);
       }
     });
+
 
     //Add Member - A user wants to add another user to their conversation.
     this.commands.put(NetworkCode.ADD_MEMBER_REQUEST,  new Command() {
