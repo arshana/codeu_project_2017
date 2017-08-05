@@ -23,6 +23,7 @@ import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Interest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
+import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Logger;
@@ -177,5 +178,4 @@ final class View implements BasicView {
     }
     return interests;
   }
-
 }

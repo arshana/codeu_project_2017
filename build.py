@@ -89,6 +89,10 @@ def build(config) :
     for root, dirs, files in os.walk(src_path) :
       src_files += [ os.path.join(root, file) for file in files if file.endswith('.java') ]
 
+  # Create the output directory; javac will not create it.
+  if not os.path.exists(out):
+    os.makedirs(out)
+
   # Take everything so far and construct a single command to build the project.
   command = [ ]
   command += [ 'javac' ]
@@ -98,7 +102,13 @@ def build(config) :
   command += src_files
 
   print('running : %s' % command)
-  print('Build %s' % ('PASSED' if subprocess.call(command) == 0 else 'FAILED'))
+
+  if subprocess.call(command) != 0:
+    print('Build FAILED')
+    sys.exit(1)
+
+  print('Build PASSED')
+
 
 
 # RUN
@@ -120,7 +130,12 @@ def run(config, start_class_path, arguments):
   for x in command :
     print x,
   print ']'
-  print('Run %s' % ('PASSED' if subprocess.call(command) == 0 else 'FAILED'))
+
+  if subprocess.call(command) != 0:
+    print('Run FAILED')
+    sys.exit(1)
+
+  print('Run PASSED')
 
 
 # USAGE

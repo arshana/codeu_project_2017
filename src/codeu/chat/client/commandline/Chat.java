@@ -19,8 +19,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -31,6 +31,9 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.ServerInfo;
+import codeu.chat.util.Tokenizer;
+
 
 import codeu.chat.common.Interest;
 import codeu.chat.common.ServerInfo;
@@ -64,9 +67,11 @@ public final class Chat {
 
     final List<String> args = new ArrayList<>();
     final Tokenizer tokenizer = new Tokenizer(line);
+
     for (String token = tokenizer.next(); token != null; token = tokenizer.next()) {
       args.add(token);
     }
+    
     final String command = args.get(0);
     args.remove(0);
 
@@ -126,6 +131,10 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
+        //Next two lines added during Version Check technical activity.
+        System.out.println("  info");
+        System.out.println("    Get version.");
+        //
         System.out.println("  exit");
         System.out.println("    Exit the program.");
       }
@@ -200,6 +209,27 @@ public final class Chat {
         }
         return null;
       }
+    });
+    
+    // INFO (return version)
+    //
+    // Add a command to respond to the user's request of info. Return version and 
+    // server up time.
+    //
+    panel.register("info", new Panel.Command(){
+        @Override
+        public void invoke(List<String> args){
+            final ServerInfo info = context.getInfo();
+            if (info == null){
+                //Communicate error to user - the server did not send us a valid info object.
+                System.out.println("ERROR: Server sent invalid info object");
+            }
+            else {
+                //Print the server info to the user in a pretty way.
+                System.out.println("VERSION: " + info.version);
+                System.out.println("SERVER UP TIME: " + info.startTime);
+            }
+        }
     });
 
     panel.register("info", new Panel.Command() {

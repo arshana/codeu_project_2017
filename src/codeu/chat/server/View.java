@@ -72,6 +72,10 @@ public final class View implements BasicView, SinglesView {
   public Collection<Message> getMessages(Collection<Uuid> ids) {
     return intersect(model.messageById(), ids);
   }
+  
+  public ServerInfo getInfo(){
+    return info;
+  }
 
   @Override
   public ServerInfo getInfo(){
